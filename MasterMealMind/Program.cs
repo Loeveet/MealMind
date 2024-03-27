@@ -15,7 +15,6 @@ namespace MasterMealMind.Web
             // Add services to the container.
             builder.Services.AddRazorPages();
 			builder.Services.AddScoped<ILocalAPIService, LocalAPIService>();
-			builder.Services.AddScoped<IIcaAPIService, IcaAPIService>();
 			builder.Services.AddScoped<HttpClient>();
             builder.Services.AddSingleton<ISearchService, SearchService>();
 
