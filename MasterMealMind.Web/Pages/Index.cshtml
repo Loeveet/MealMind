@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Home page";
+}
+<div class="container">
+	<div class="text-start">
+		<div class="row">
+			<div class="form-group col-md-10">
+				<h4>@(string.IsNullOrEmpty(Model.SearchString) ? "Receptförslag" : "Receptförslag på " + Model.SearchString)</h4>
+			</div>
+			<div class="form-group col-md-2">
+				<form method="post" asp-page-handler="EmptySearch">
+					<button class="btn btn-secondary" type="submit">Töm sökning</button>
+				</form>
+			</div>
+		</div>
+
+		@if (Model.RecipeResult != null)
+		{
+			<table class="table table-striped" aria-label="" aria-hidden="true">
+				@foreach (var recipe in Model.RecipeResult.Recipes)
+				{
+					<tr>
+						<td>
+							<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id">
+								@recipe.Title
+							</a>
+						</td>
+						<td>
+							<p>@recipe.PreambleHTML.ToString()</p>
+						</td>
+						<td><img src="@recipe.ImageUrl" height="150" alt="Bild på @recipe.Title"></td>
+					</tr>
+				}
+			</table>
+		}
+	</div>
+</div>

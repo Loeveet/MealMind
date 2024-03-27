@@ -1,0 +1,93 @@
+﻿@page
+@using MasterMealMind.Core.Enum;
+@model GroceryPageModel
+@{
+}
+
+<div class="container">
+	<p class="italic-bold-text">Lägg till/ändra matvara</p>
+	<form method="post" asp-page-handler="AddOrUpdateGrocery">
+		<div class="row">
+			<div class="form-group col-md-6">
+
+				<label for="Name" class="sr-only">Namn</label>
+				<input asp-for="NewGrocery.Name" type="text" class="form-control" id="Name" placeholder="Lägg till namn" />
+			</div>
+			<div class="form-group col-md-6">
+
+				<label for="Quantity" class="sr-only">Antal</label>
+				<input asp-for="NewGrocery.Quantity" type="number" class="form-control" id="Quantity" placeholder="Lägg till antal" />
+			</div>
+		</div>
+		<div class="form-group">
+
+			<label for="Description" class="sr-only">Beskrivning</label>
+			<textarea asp-for="NewGrocery.Description" class="form-control" id="Description" placeholder="Lägg till beskrivning"></textarea>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-6">
+				<select asp-for="NewGrocery.Unit" asp-items="Html.GetEnumSelectList<UnitType>()" class="form-control">
+					<option value="">Enhet</option>
+				</select>
+			</div>
+			<div class="form-group col-md-6">
+				<select asp-for="NewGrocery.Storage" asp-items="Html.GetEnumSelectList<Storage>()" class="form-control">
+					<option value="">Förvaring</option>
+				</select>
+			</div>
+		</div>
+
+		<button class="btn btn-primary btn-block fa-lg mb-3" type="submit">Lägg till / Ändra</button>
+	</form>
+
+
+
+	@if (Model.Groceries != null)
+	{
+		<table class="table table-striped" aria-label="" aria-hidden="true">
+			<thead>
+				<tr>
+					<th scope="col">
+						<form method="post" asp-page-handler="AddToIngredientSearchList" id="formSelectedGroceryNames">
+							<input type="hidden" name="selectedGroceryNames" id="selectedGroceryNames" />
+							<button class="btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Visar recept på markerade matvaror" type="submit">
+								Sök recept
+							</button>
+						</form>
+					</th>
+					<th scope="col">Namn</th>
+					<th scope="col">Mängd</th>
+					<th scope="col">Förvaring</th>
+					<th scope="col">Beskrivning</th>
+					<th scope="col">Ändra</th>
+					<th scope="col">Ta bort</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var grocery in Model.Groceries)
+				{
+					<tr>
+						<td><input type="checkbox" class="product-checkbox" data-grocery-name="@grocery.Name" value="@grocery.Name" /></td>
+						<td>@grocery.Name</td>
+						<td>@grocery.Quantity @grocery.Unit</td>
+						<td>@grocery.Storage</td>
+						<td>@grocery.Description</td>
+						<td>
+							<form method="post" asp-page-handler="EditGrocery">
+								<input type="hidden" name="editId" value="@grocery.Id">
+								<button type="submit" class="btn btn-warning">Ändra</button>
+							</form>
+						</td>
+						<td>
+							<form method="post" asp-page-handler="DeleteGrocery">
+								<input type="hidden" name="deleteId" value="@grocery.Id">
+								<button type="submit" class="btn btn-danger">Ta bort</button>
+							</form>
+						</td>
+					</tr>
+				}
+
+			</tbody>
+		</table>
+	}
+</div>

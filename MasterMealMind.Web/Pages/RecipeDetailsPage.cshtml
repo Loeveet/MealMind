@@ -1,0 +1,60 @@
+﻿@page
+@model MasterMealMind.Web.Pages.RecipeDetailsPageModel
+@{
+
+}
+@if (Model.Recipe != null)
+{
+    <div class="card">
+        <div class="row no-gutters">
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h4 class="card-title">@Model.Recipe.Title</h4>
+                    <p class="card-text">@Html.Raw(Model.Recipe.PreambleHTML)</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="@Model.Recipe.ImageUrl" class="card-img" alt="Recipe Image" width="100">
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-striped border" aria-label="" aria-hidden="true">
+                @foreach (var ingredientGroup in Model.Recipe.IngredientGroups)
+                {
+                    @if (ingredientGroup.GroupName != null)
+                    {
+                        <tr>
+                            <td>
+                                <h5>@ingredientGroup.GroupName</h5>
+                            </td>
+                        </tr>
+                    }
+                    foreach (var ingredient in ingredientGroup.Ingredients)
+                    {
+                        <tr>
+                            <td>
+                                @ingredient.Text
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        <div class="col-6">
+            <h5>Steg för steg:</h5>
+            <br />
+            <ol>
+                @foreach (var steps in Model.Recipe.CookingSteps)
+                {
+                    <li>
+                        @Html.Raw(steps)
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+}
