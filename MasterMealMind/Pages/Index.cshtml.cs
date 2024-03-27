@@ -11,7 +11,7 @@ namespace MasterMealMind.Web.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IIcaAPIService _icaAPIService;
+        //private readonly IIcaAPIService _icaAPIService;
         private readonly ISearchService _searchService;
 
         public string SearchString { get; set; }
@@ -21,13 +21,13 @@ namespace MasterMealMind.Web.Pages
 
 		public IndexModel(IIcaAPIService icaAPIService, ISearchService searchService)
         {
-            _icaAPIService = icaAPIService;
+            //_icaAPIService = icaAPIService;
             _searchService = searchService;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            RecipeResult = await _icaAPIService.GetRecipes();
+            //RecipeResult = await _icaAPIService.GetRecipes();
             SearchString = _searchService.GetSearchString();
             return Page();
         }
