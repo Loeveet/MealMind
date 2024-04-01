@@ -1,6 +1,7 @@
 using MasterMealMind.Core.Enum;
 using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Services;
+using MasterMealMind.Infrastructure.Managers;
 using MasterMealMind.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
