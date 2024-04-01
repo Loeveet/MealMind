@@ -7,16 +7,16 @@ namespace MasterMealMind.Web.Pages
 {
     public class RecipeDetailsPageModel : PageModel
     {
-        private readonly IIcaAPIService _icaAPIService;
+        
 
         public Recipe Recipe { get; set; }
-        public RecipeDetailsPageModel(IIcaAPIService icaAPIService)
+        public RecipeDetailsPageModel()
         {
-            _icaAPIService = icaAPIService;
+            
         }
         public async Task<IActionResult> OnGetAsync(int recipeId)
         {
-            Recipe = await _icaAPIService.GetOneRecipe(recipeId);
+            // Recipe = await _icaAPIService.GetOneRecipe(recipeId);
             return Page();
         }
     }
