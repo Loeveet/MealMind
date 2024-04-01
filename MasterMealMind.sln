@@ -5,13 +5,11 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Web", "MasterMealMind\MasterMealMind.Web.csproj", "{705C781F-B6CC-4407-8835-BF501A837FEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.API", "MasterMealMind.API\MasterMealMind.API.csproj", "{CBBBB168-A81D-436E-968E-B1B6B8D5E914}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Tests", "MasterMealMind.Tests\MasterMealMind.Tests.csproj", "{E9FE25E3-8797-43AC-B7E0-F1F6DBF8CD29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealMind.Core", "MasterMealMind.Core\MasterMealMind.Core.csproj", "{73BAA25A-C48C-412E-9DD1-FFF1ECE0CD41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Core", "MasterMealMind.Core\MasterMealMind.Core.csproj", "{73BAA25A-C48C-412E-9DD1-FFF1ECE0CD41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealMind.Infrastructure", "MasterMealMind.Infrastructure\MasterMealMind.Infrastructure.csproj", "{4A985C93-9939-4A32-A14A-41E4D005618D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Infrastructure", "MasterMealMind.Infrastructure\MasterMealMind.Infrastructure.csproj", "{4A985C93-9939-4A32-A14A-41E4D005618D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{705C781F-B6CC-4407-8835-BF501A837FEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{705C781F-B6CC-4407-8835-BF501A837FEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{705C781F-B6CC-4407-8835-BF501A837FEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBBBB168-A81D-436E-968E-B1B6B8D5E914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBBBB168-A81D-436E-968E-B1B6B8D5E914}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBBBB168-A81D-436E-968E-B1B6B8D5E914}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBBBB168-A81D-436E-968E-B1B6B8D5E914}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E9FE25E3-8797-43AC-B7E0-F1F6DBF8CD29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9FE25E3-8797-43AC-B7E0-F1F6DBF8CD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9FE25E3-8797-43AC-B7E0-F1F6DBF8CD29}.Release|Any CPU.ActiveCfg = Release|Any CPU

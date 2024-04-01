@@ -4,7 +4,6 @@ using System.Text.Json;
 using Moq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MasterMealMind.Web.Pages;
-using MasterMealMind.Web.ApiServices;
 using MasterMealMind.Infrastructure.Services;
 using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Services;
@@ -63,7 +62,7 @@ namespace MasterMealMind.Tests
 
 				// Act
 				var modifiedGrocery = new Grocery { Name = "ExistingGrocery", Quantity = 5 };
-				await sut.AddOrUpdateGroceryAsync(modifiedGrocery);
+				await sut.AddOrUpdateAsync(modifiedGrocery);
 				var updatedGrocery = await dbContext.Groceries.FirstOrDefaultAsync(g => g.Name == "ExistingGrocery");
 
 				// Assert
@@ -86,7 +85,7 @@ namespace MasterMealMind.Tests
 
 				// Act
 				var newGrocery = new Grocery { Name = "NewGrocery", Quantity = 10 };
-				await sut.AddOrUpdateGroceryAsync(newGrocery);
+				await sut.AddOrUpdateAsync(newGrocery);
 				var addedGrocery = await dbContext.Groceries.FirstOrDefaultAsync(g => g.Name == "NewGrocery");
 
 				// Assert
@@ -112,7 +111,7 @@ namespace MasterMealMind.Tests
 				var sut = new GroceryService(dbContext);
 
 				// Act
-				await sut.DeleteGroceryAsync(1);
+				await sut.DeleteAsync(1);
 				var deletedGrocery = await dbContext.Groceries.FindAsync(1);
 
 				// Assert
@@ -133,7 +132,7 @@ namespace MasterMealMind.Tests
 				var sut = new GroceryService(dbContext);
 
 				// Act and Assert
-				await Assert.ThrowsAsync<InvalidOperationException>(() => sut.DeleteGroceryAsync(1));
+				await Assert.ThrowsAsync<InvalidOperationException>(() => sut.DeleteAsync(1));
 			}
 		}
 	}

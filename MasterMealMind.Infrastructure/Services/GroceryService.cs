@@ -18,12 +18,12 @@ namespace MasterMealMind.Infrastructure.Services
 			_context = context;
 		}
 
-		public async Task<List<Grocery>> GetAllGroceriesAsync()
+		public async Task<List<Grocery>> GetAllAsync()
 		{
 			return await _context.Groceries.ToListAsync();
 		}
 
-		public async Task<Grocery> GetOneGroceryAsync(int id)
+		public async Task<Grocery> GetOneAsync(int id)
 		{
             var grocery = await _context.Groceries.SingleOrDefaultAsync(g => g.Id == id);
 
@@ -33,7 +33,7 @@ namespace MasterMealMind.Infrastructure.Services
             return grocery;
         }
 
-		public async Task AddOrUpdateGroceryAsync(Grocery modifiedGrocery)
+		public async Task AddOrUpdateAsync(Grocery modifiedGrocery)
 		{
 			if (await GroceryExistsAsync(modifiedGrocery.Name))
 			{
@@ -49,7 +49,7 @@ namespace MasterMealMind.Infrastructure.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task UpdateGroceryAsync(Grocery grocery)
+		public async Task UpdateAsync(Grocery grocery)
 		{
 
 			var groceryToUpdate = await _context.Groceries.FirstOrDefaultAsync(g => string.Equals(g.Name, grocery.Name, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentNullException("updateGrocery");
@@ -58,7 +58,7 @@ namespace MasterMealMind.Infrastructure.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task DeleteGroceryAsync(int id)
+		public async Task DeleteAsync(int id)
 		{
 			var grocery = await _context.Groceries.FindAsync(id);
 

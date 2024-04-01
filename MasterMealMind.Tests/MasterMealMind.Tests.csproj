@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MasterMealMind.API\MasterMealMind.API.csproj" />
     <ProjectReference Include="..\MasterMealMind.Core\MasterMealMind.Core.csproj" />
     <ProjectReference Include="..\MasterMealMind.Infrastructure\MasterMealMind.Infrastructure.csproj" />
     <ProjectReference Include="..\MasterMealMind\MasterMealMind.Web.csproj" />

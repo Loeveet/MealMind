@@ -1,8 +1,9 @@
 using MasterMealMind.Core.Enum;
 using MasterMealMind.Core.Interfaces;
+using MasterMealMind.Core.Services;
 using MasterMealMind.Infrastructure.Services;
-using MasterMealMind.Web.ApiServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MasterMealMind.Web
 {
@@ -12,14 +13,19 @@ namespace MasterMealMind.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            builder.Services.AddDbContext<MyDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
+
             // Add services to the container.
             builder.Services.AddRazorPages();
-			builder.Services.AddScoped<ILocalAPIService, LocalAPIService>();
-			builder.Services.AddScoped<HttpClient>();
-            builder.Services.AddSingleton<ISearchService, SearchService>();
+            builder.Services.AddScoped<IGroceryService, GroceryService>();
+            builder.Services.AddScoped<ISearchService, SearchService>();
 
 
-			var app = builder.Build();
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
