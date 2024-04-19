@@ -22,6 +22,7 @@ namespace MasterMealMind.Web
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IGroceryService, GroceryService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
+            builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
 
 
 
