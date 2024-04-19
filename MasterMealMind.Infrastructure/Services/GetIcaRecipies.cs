@@ -6,6 +6,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System.Net;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MasterMealMind.Infrastructure.Services
 {
@@ -105,13 +106,25 @@ namespace MasterMealMind.Infrastructure.Services
             htmlDocument.LoadHtml(html);
 
             var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
-
-
             var title = titleElements.InnerText.Trim();
             recipe.Title = DecodeHtml(title);
 
+			var preamElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__preamble')]");
+			var pream = preamElements.InnerText.Trim();
+			recipe.Preamble = DecodeHtml(pream);
 
-            var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]//div");
+			var imgElement = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__desktop-image-wrapper__inner')]//img");
+			if (imgElement != null)
+			{
+				var imgUrl = imgElement.GetAttributeValue("src", "");
+				recipe.ImgURL = DecodeHtml(imgUrl);
+			}
+			else
+			{
+				recipe.ImgURL = null; // Lägg till sån här felhantering på alla proppar
+			}
+
+			var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]//div");
 
             if (ingredientElements != null)
             {
@@ -120,13 +133,14 @@ namespace MasterMealMind.Infrastructure.Services
             }
 
             var descElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
-            recipe.Desc = DecodeHtml(descElements.InnerText.Trim());
-            recipe.Desc = UseRegex(recipe.Desc);
+            recipe.Description = DecodeHtml(descElements.InnerText.Trim());
+            recipe.Description = UseRegex(recipe.Description);
 
-            recipes.Add(recipe);
+			recipes.Add(recipe);
             await Task.Delay(1000); 
 
-        }
+
+		}
         static string UseRegex(string description)
         {
             var timerPattern = @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?";
