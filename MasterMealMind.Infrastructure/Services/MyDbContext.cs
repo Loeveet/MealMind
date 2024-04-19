@@ -16,6 +16,8 @@ namespace MasterMealMind.Infrastructure.Services
         }
 
         public DbSet<Grocery> Groceries { get; set;}
+		public DbSet<Recipe> Recipes { get; set; }
 
-    }
+
+	}
 }

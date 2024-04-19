@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MasterMealMind.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace MasterMealMind.Core.Interfaces
 {
     public interface IGetIcaRecipies
     {
-        Task Get();
+        public Task<List<Recipe>> Get();
     }
 }

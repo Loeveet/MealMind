@@ -16,10 +16,10 @@
 			</div>
 		</div>
 
-		@if (Model.RecipeResult != null)
+		@if (Model.Recipes != null)
 		{
 			<table class="table table-striped" aria-label="" aria-hidden="true">
-				@foreach (var recipe in Model.RecipeResult.Recipes)
+@* 				@foreach (var recipe in Model.RecipeResult.Recipes)
 				{
 					<tr>
 						<td>
@@ -28,9 +28,23 @@
 							</a>
 						</td>
 						<td>
-							<p>@recipe.PreambleHTML.ToString()</p>
+							<p>@recipe.Desc?.ToString()</p>
 						</td>
-						<td><img src="@recipe.ImageUrl" height="150" alt="Bild på @recipe.Title"></td>
+						//<td><img src="@recipe.ImageUrl" height="150" alt="Bild på @recipe.Title"></td>
+					</tr>
+				} *@
+				@foreach (var recipe in Model.Recipes)
+				{
+					<tr>
+						<td>
+							<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id">
+								@recipe.Title
+							</a>
+						</td>
+						<td>
+							<p>@recipe.Desc?.ToString()</p>
+						</td>
+						@* //<td><img src="@recipe.ImageUrl" height="150" alt="Bild på @recipe.Title"></td> *@
 					</tr>
 				}
 			</table>

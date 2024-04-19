@@ -4,18 +4,17 @@ using MasterMealMind.Core.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace MasterMealMind.Infrastructure.Services
 {
     public class GetIcaRecipies : IGetIcaRecipies
     {
-        public async Task Get()
+        public async Task<List<Recipe>> Get()
         {
+            var recipes = new List<Recipe>();
+
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--headless");
 
@@ -88,87 +87,92 @@ namespace MasterMealMind.Infrastructure.Services
                 }
 
                 // Skrapa varje recept i flera trådar
-                await Task.WhenAll(recipeLinks.Select(link => ProcessRecipeAsync(driver, link)));
+                await Task.WhenAll(recipeLinks.Select(link => ProcessRecipeAsync(driver, link, recipes)));
+
+                return recipes;
 
             }
         }
 
-        static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink)
+        static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
         {
             var recipe = new Recipe();
-            // Navigera till receptsidan
             driver.Navigate().GoToUrl(recipeLink);
             var httpClient = new HttpClient();
-            var html = httpClient.GetStringAsync(recipeLink).Result;
+            var html = await httpClient.GetStringAsync(recipeLink);
 
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
-            //Get the title
             var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
 
 
             var title = titleElements.InnerText.Trim();
-            //Console.WriteLine("Titel: " + title);
-            recipe.Title = title;
+            recipe.Title = DecodeHtml(title);
 
 
             var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]//div");
 
-
             if (ingredientElements != null)
             {
-                // Skapa en lista för att lagra ingredienserna
-                var ingredientsList = new List<string>();
-
-                // Loopa igenom ingredienselementen och extrahera texten
-                foreach (var ingredientElement in ingredientElements)
-                {
-                    // Extrahera texten från ingredienselementet och lägg till i listan
-                    string ingredientText = ingredientElement.InnerText.Trim();
-                    // Kontrollera om ingrediensen är tom eller inte
-                    if (!string.IsNullOrWhiteSpace(ingredientText))
-                    {
-                        // Om ingrediensen inte är tom, lägg till den i listan
-                        ingredientsList.Add(ingredientText);
-                        recipe.Ingredients.Add(ingredientText);
-                    }
-                }
-
-                // Skriv ut eller bearbeta listan med ingredienser här
-                //foreach (var ingredient in ingredientsList)
-                //{
-                //    Console.WriteLine("Ingrediens: " + ingredient);
-                //}
+                List<string> ingredients = FilterIngredients(ingredientElements);
+                recipe.Ingredients?.AddRange(ingredients);
             }
-
-            //Get the description
 
             var descElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
+            recipe.Desc = DecodeHtml(descElements.InnerText.Trim());
+            recipe.Desc = UseRegex(recipe.Desc);
 
-            var desc = descElements.InnerText.Trim();
-            recipe.Desc = desc;
-
-            // Här kan du skrapa och behandla informationen från receptsidan
-            // Till exempel, extrahera titel, ingredienser och instruktioner för att göra receptet
-            // och spara den i en databas eller annan lagringsmekanism
-            //Console.WriteLine($"Processing recipe: {driver.Title}");
-            Console.WriteLine(recipe.Title);
-            foreach (var i in recipe.Ingredients)
-            {
-                Console.WriteLine(i);
-            }
-            Console.WriteLine(recipe.Desc);
-
-            await Task.Delay(1000); // Lägg till en kort väntetid för att undvika att överbelasta webbplatsen
+            recipes.Add(recipe);
+            await Task.Delay(1000); 
 
         }
+        static string UseRegex(string description)
+        {
+            var timerPattern = @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?";
+
+            var dotPattern = @"\.(?!\s)";
+
+            var newDesc = Regex.Replace(description, timerPattern, "");
+
+            newDesc = Regex.Replace(newDesc, dotPattern, ". ");
+
+            return newDesc;
+
+        }
+
+        static List<string> FilterIngredients(HtmlNodeCollection ingredientElements)
+        {
+            List<string> ingre = [];
+
+            foreach (var ingredientElement in ingredientElements)
+            {
+                var ingredientText = DecodeHtml(ingredientElement.InnerText.Trim());
+                if (!string.IsNullOrWhiteSpace(ingredientText))
+                {
+                    ingre.Add(DecodeHtml(ingredientText));
+                }
+            }
+            for (int i = 0; i < ingre.Count; i++)
+            {
+                for (int j = 0; j < ingre.Count; j++)
+                {
+                    if (i != j && ingre[i].Contains(ingre[j]))
+                    {
+                        ingre.RemoveAt(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+
+            return ingre;
+        }
+        static string DecodeHtml(string html)
+        {
+            return WebUtility.HtmlDecode(html);
+        }
     }
-    class Recipe
-    {
-        public string? Title { get; set; }
-        public string? Desc { get; set; }
-        public List<string>? Ingredients { get; set; } = new List<string>();
-    }
+
 }
 
