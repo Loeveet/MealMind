@@ -17,7 +17,5 @@ namespace MasterMealMind.Core.Services
 
         Task<bool> GroceryExistsAsync(int id);
         Task<bool> GroceryExistsAsync(string name);
-
-        Grocery GetGroceryToUpdate(Grocery updatedGrocery, Grocery originalGrocery);
     }
 }

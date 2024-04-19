@@ -9,6 +9,7 @@ using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MasterMealMind.Infrastructure.Managers;
 
 namespace MasterMealMind.Tests
 {
