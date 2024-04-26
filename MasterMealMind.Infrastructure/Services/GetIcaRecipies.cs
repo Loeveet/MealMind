@@ -46,16 +46,17 @@ namespace MasterMealMind.Infrastructure.Services
 
 				// Hitta knappen "Visa mer" och klicka på den för att ladda in fler recept
 				int clickCount = 0;
-                int maxClicks = 2; // Ange det önskade antalet klick
+                int maxClicks = 5; // Ange det önskade antalet klick
 
                 while (clickCount < maxClicks)
                 {
 					try
 					{
 						var showMoreButton = driver.FindElement(By.XPath("//button[contains(@class, 'ids-button ids-button--tertiary ids-button--md ids-button--text-icon ids-button--text-icon--right')]"));
-						((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoViewIfNeeded(true);", showMoreButton);
+						((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(false);", showMoreButton);
                         actions.MoveToElement(showMoreButton).Click().Perform();
                         clickCount++;
+                        Thread.Sleep(1000);
 					}
 					catch (NoSuchElementException)
 					{
