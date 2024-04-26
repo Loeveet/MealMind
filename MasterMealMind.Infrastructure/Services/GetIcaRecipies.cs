@@ -1,22 +1,23 @@
-﻿using HtmlAgilityPack;
+﻿using OpenQA.Selenium.Support.UI;
+using HtmlAgilityPack;
 using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 using System.Net;
 using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
+using SeleniumExtras.WaitHelpers;
+using OpenQA.Selenium.Interactions;
 
 namespace MasterMealMind.Infrastructure.Services
 {
     public class GetIcaRecipies : IGetIcaRecipies
     {
-        public async Task<List<Recipe>> Get()
+        public async Task<List<Recipe>> GetAsync()
         {
             var recipes = new List<Recipe>();
 
-            ChromeOptions options = new ChromeOptions();
+            var options = new ChromeOptions();
             options.AddArgument("--headless");
 
             // Instansiera Chrome WebDriver
@@ -24,60 +25,44 @@ namespace MasterMealMind.Infrastructure.Services
             {
                 // Navigera till webbplatsen med recept
                 driver.Navigate().GoToUrl("https://www.ica.se/recept/");
+				var actions = new Actions(driver);
 
-                // Lista för att lagra recept
-                var recipeLinks = new List<string>();
+				// Lista för att lagra recept
+				var recipeLinks = new List<string>();
 
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
                 // Hitta och klicka på knappen för att acceptera cookies
                 try
                 {
-                    System.Threading.Thread.Sleep(2000);
-                    var acceptCookiesButton = driver.FindElement(By.XPath("//button[contains(text(), 'Godkänn kakor')]"));
-                    acceptCookiesButton.Click();
-                }
-                catch (NoSuchElementException)
-                {
-                    Console.WriteLine("Cookiespopup-knappen hittades inte.");
-                    // Fortsätt med resten av koden om cookiespopup-knappen inte hittas
-                }
+					var acceptCookiesButton = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), 'Godkänn kakor')]")));
+					acceptCookiesButton.Click();
+				}
+				catch (NoSuchElementException)
+				{
+					Console.WriteLine("Cookiespopup-knappen hittades inte.");
+					// Fortsätt med resten av koden om cookiespopup-knappen inte hittas
+				}
 
-                // Hitta knappen "Visa mer" och klicka på den för att ladda in fler recept
-                int clickCount = 0;
-                int maxClicks = 0; // Ange det önskade antalet klick
+				// Hitta knappen "Visa mer" och klicka på den för att ladda in fler recept
+				int clickCount = 0;
+                int maxClicks = 2; // Ange det önskade antalet klick
 
                 while (clickCount < maxClicks)
                 {
-                    try
-                    {
-                        var showMoreButton = wait.Until(driver =>
-                        {
-                            var element = driver.FindElement(By.XPath("//button[contains(@class, 'ids-button ids-button--tertiary ids-button--md ids-button--text-icon ids-button--text-icon--right')]"));
-                            if (element != null && element.Displayed)
-                            {
-                                // Scrolla till knappen "Visa mer"
-                                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(false);", element);
-
-
-                                return element;
-                            }
-                            else
-                            {
-                                return null;
-                            }
-                        });
-                        System.Threading.Thread.Sleep(2000); // Anpassa väntetiden efter behov
-                        showMoreButton.Click();
-                        System.Threading.Thread.Sleep(2000);
-                        // Vänta en kort stund för att låta sidan ladda in fler recept
+					try
+					{
+						var showMoreButton = driver.FindElement(By.XPath("//button[contains(@class, 'ids-button ids-button--tertiary ids-button--md ids-button--text-icon ids-button--text-icon--right')]"));
+						((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoViewIfNeeded(true);", showMoreButton);
+                        actions.MoveToElement(showMoreButton).Click().Perform();
                         clickCount++;
-                    }
-
-                    catch (NoSuchElementException)
-                    {
-                        // Inga fler "Visa mer"-knappar hittades, avbryt loopen
-                        break;
-                    }
+					}
+					catch (NoSuchElementException)
+					{
+						// Inga fler "Visa mer"-knappar hittades, avbryt loopen
+						break;
+					}
+					
                 }
 
                 // Hitta länkarna till varje enskilt recept efter att alla sidor har laddats
@@ -162,7 +147,8 @@ namespace MasterMealMind.Infrastructure.Services
             foreach (var ingredientElement in ingredientElements)
             {
                 var ingredientText = DecodeHtml(ingredientElement.InnerText.Trim());
-                if (!string.IsNullOrWhiteSpace(ingredientText))
+				ingredientText = UseRegex(ingredientText);
+				if (!string.IsNullOrWhiteSpace(ingredientText))
                 {
                     ingre.Add(DecodeHtml(ingredientText));
                 }

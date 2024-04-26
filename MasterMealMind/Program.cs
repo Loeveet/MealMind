@@ -23,10 +23,10 @@ namespace MasterMealMind.Web
             builder.Services.AddScoped<IGroceryService, GroceryService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
             builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
+			builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 
-
-            var app = builder.Build();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

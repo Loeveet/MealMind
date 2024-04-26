@@ -18,6 +18,7 @@
 
 		@if (Model.Recipes != null)
 		{
+			<p>@Model.Recipes.Count</p>
 			<table class="table table-striped" aria-label="" aria-hidden="true">
 @* 				@foreach (var recipe in Model.RecipeResult.Recipes)
 				{
@@ -43,6 +44,12 @@
 						</td>
 						<td>
 							<p>@recipe.Preamble?.ToString()</p>
+						</td>
+						<td>
+							@foreach(var i in recipe.Ingredients)
+							{
+								<div>@i</div>
+							}
 						</td>
 						<td><img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title"></td>
 					</tr>
