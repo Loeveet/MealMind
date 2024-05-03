@@ -24,50 +24,51 @@
 		@if (Model.Recipes != null)
 		{
 			<p>@Model.Recipes.Count()</p>
-			<table class="table table-striped" aria-label="" aria-hidden="true">
-@* 				@foreach (var recipe in Model.RecipeResult.Recipes)
-				{
-					<tr>
-						<td>
-							<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id">
-								@recipe.Title
-							</a>
-						</td>
-						<td>
-							<p>@recipe.Desc?.ToString()</p>
-						</td>
-						//<td><img src="@recipe.ImageUrl" height="150" alt="Bild på @recipe.Title"></td>
-					</tr>
-				} *@
-				@foreach (var recipe in Model.Recipes)
-				{
-					<tr>
-						<td>
-							<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id">
-								@recipe.Title
-							</a>
-						</td>
-						<td>
-							<p>@recipe.Preamble?.ToString()</p>
-						</td>
-						<td>
-							@if (!string.IsNullOrEmpty(recipe.Ingredients))
-							{
-								@foreach (var ingredient in recipe.Ingredients.Split('|'))
-								{
-									<div>@ingredient.Trim()</div>
-								}
-							}
-							@* <div>@recipe.Ingredients</div> *@
-							@* @foreach(var i in recipe.Ingredients)
-							{
-								@i
-							} *@
-						</td>
-						<td><img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title"></td>
-					</tr>
-				}
-			</table>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3 col-sm-3">Titel</th> 
+                                        <th class="col-md-4 col-sm-4">Beskrivning</th>
+                                        <th class="col-md-3 col-sm-3">Ingredienser</th>
+                                        <th class="col-md-2 col-sm-2">@string.Empty</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var recipe in Model.Recipes)
+                                    {
+                                        <tr>
+                                            <td class="col-md-3 col-sm-3">
+                                                <a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id">
+                                                    @recipe.Title
+                                                </a>
+                                            </td>
+                                            <td class="col-md-4 col-sm-4">
+                                                <p>@recipe.Preamble?.ToString()</p>
+                                            </td>
+                                            <td class="col-md-3 col-sm-3">
+                                                @if (!string.IsNullOrEmpty(recipe.Ingredients))
+                                                {
+                                                    foreach (var ingredient in recipe.Ingredients.Split('|'))
+                                                    {
+                                                        <div>@ingredient.Trim()</div>
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="col-md-2 col-sm-2">
+                                                <img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title">
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		}
 	</div>
 </div>

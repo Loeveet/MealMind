@@ -38,7 +38,6 @@ namespace MasterMealMind.Web.Pages
             await _getIcaRecipies.GetIcaAsync();
 			return RedirectToPage();
 			
-
 		}
 	}
 }

@@ -13,6 +13,34 @@ namespace MasterMealMind.Scraper.Helpers
 {
 	public class ScraperHelpers
 	{
+		/*
+		DecodeHtml takes a string encoded with HTML characters and converts 
+		them into a readable format.
+		 
+		UseRegex takes a string and removes 'Öppna timer' and 'Näringsvärden', 
+		as well as adds a space after periods.
+
+		FilterIngredients takes a collection of HTML nodes representing ingredients. 
+		It iterates over each node, extracts the inner text, and applies decoding 
+		and regex operations to clean up the text. After cleaning, it removes any 
+		duplicate ingredients and removes the first element (assumed to be a summary or title). 
+		Finally, it joins the cleaned ingredients into a pipe-separated string and returns it.
+		 
+		ProcessRecipeAsync asynchronously processes a recipe by scraping data from a given recipe link. 
+		It takes an instance of a WebDriver (IWebDriver), the URL of the recipe, and a list of recipes to populate.
+
+		1. It navigates the WebDriver to the provided recipe link and retrieves the HTML content using an HttpClient.
+		2. It parses the HTML content using the HtmlAgilityPack.
+		3. It extracts various recipe details such as title, preamble, image URL, ingredients, 
+		and description from specific HTML elements.
+		4. It cleans up the extracted data using helper methods like DecodeHtml and UseRegex.
+		5. It constructs a Recipe object with the extracted details.
+		6. It adds the constructed recipe to the list of recipes.
+		7. It introduces a delay of 1000 milliseconds (1 second) before continuing execution asynchronously.
+
+		Overall, this method is responsible for scraping recipe data from a web page and populating a 
+		list of recipe objects asynchronously.
+		 */
 		public static string DecodeHtml(string html)
 		{
 			return WebUtility.HtmlDecode(html);
@@ -20,22 +48,34 @@ namespace MasterMealMind.Scraper.Helpers
 
 		public static string UseRegex(string description)
 		{
-			var timerPattern = @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?";
-			var dotPattern = @"\.(?!\s)";
-			var nutritionPattern = @"Näringsvärde.*";
-			var newDesc = Regex.Replace(description, timerPattern, "");
-			newDesc = Regex.Replace(newDesc, dotPattern, ". ");
-			newDesc = Regex.Replace(newDesc, nutritionPattern, "");
+			//	var timerPattern = @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?";
+			//	var dotPattern = @"\.(?!\s)";
+			//	var nutritionPattern = @"Näringsvärde.*";
+			//	var newDesc = Regex.Replace(description, timerPattern, string.Empty);
+			//	newDesc = Regex.Replace(newDesc, dotPattern, ". ");
+			//	newDesc = Regex.Replace(newDesc, nutritionPattern, string.Empty);
 
-			return newDesc;
+			//	return newDesc;
+
+			var patterns = new Dictionary<string, string>
+			{
+				{ @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?", string.Empty },
+				{ @"\.(?!\s)", ". " },
+				{ @"Näringsvärde.*", string.Empty }
+			};
+
+			foreach (var pattern in patterns)
+			{
+				description = Regex.Replace(description, pattern.Key, pattern.Value);
+			}
+
+			return description;
 
 		}
 
 		public static string FilterIngredients(HtmlNodeCollection ingredientElements)
 		{
-
-
-			List<string> ingredients = [];
+			var ingredients = new List<string>();
 
 			foreach (var ingredientElement in ingredientElements)
 			{
@@ -54,32 +94,6 @@ namespace MasterMealMind.Scraper.Helpers
 			}
 
 			return string.Join("| ", ingredients);
-
-			//List<string> ingre = [];
-
-			//foreach (var ingredientElement in ingredientElements)
-			//{
-			//	var ingredientText = DecodeHtml(ingredientElement.InnerText.Trim());
-			//	ingredientText = UseRegex(ingredientText);
-			//	if (!string.IsNullOrWhiteSpace(ingredientText))
-			//	{
-			//		ingre.Add(DecodeHtml(ingredientText));
-			//	}
-			//}
-			//for (int i = 0; i < ingre.Count; i++)
-			//{
-			//	for (int j = 0; j < ingre.Count; j++)
-			//	{
-			//		if (i != j && ingre[i].Contains(ingre[j]))
-			//		{
-			//			ingre.RemoveAt(i);
-			//			i--;
-			//			break;
-			//		}
-			//	}
-			//}
-
-			//return ingre;
 		}
 		public static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
 		{
@@ -115,7 +129,6 @@ namespace MasterMealMind.Scraper.Helpers
 			if (ingredientElements != null)
 			{
 				string ingredients = FilterIngredients(ingredientElements);
-				//recipe.Ingredients?.AddRange(ingredients);
 				recipe.Ingredients = string.Join(", ", ingredients);
 			}
 
