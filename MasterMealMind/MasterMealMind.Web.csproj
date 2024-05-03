@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MasterMealMind.Core\MasterMealMind.Core.csproj" />
     <ProjectReference Include="..\MasterMealMind.Infrastructure\MasterMealMind.Infrastructure.csproj" />
+    <ProjectReference Include="..\MasterMealMind.Scraper\MasterMealMind.Scraper.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,14 +9,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MasterMealMind.Infrastructure.Services
 {
-	public class GroceryService : IGroceryService
+	public class GroceryService(MyDbContext context) : IGroceryService
 	{
-		private readonly MyDbContext _context;
-
-		public GroceryService(MyDbContext context)
-		{
-			_context = context;
-		}
+		private readonly MyDbContext _context = context;
 
 		public async Task<List<Grocery>> GetAllAsync()
 		{

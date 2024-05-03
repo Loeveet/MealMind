@@ -10,7 +10,9 @@ namespace MasterMealMind.Core.Interfaces
 	public interface IRecipeService
 	{
 		Task<List<Recipe>> GetAsync();
-		Task<List<string>> GetTitlesAsync();
+		Task<List<string?>> GetTitlesAsync();
 		Task AddAsync(List<Recipe> recipes);
+		Task <IEnumerable<Recipe>> GetTenAsync();
+		Task<IEnumerable<Recipe>> GetBasedOnSearchAsync();
 	}
 }

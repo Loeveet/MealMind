@@ -10,7 +10,7 @@ namespace MasterMealMind.Core.Models
         public string? Description { get; set; }
 		public string? Preamble { get; set; }
 		public string? ImgURL { get; set; }
-		public List<string> Ingredients { get; set; } = [];
+		public string? Ingredients { get; set; }
 
     }
 }

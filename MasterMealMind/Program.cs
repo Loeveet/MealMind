@@ -1,13 +1,11 @@
-using MasterMealMind.Core.Enum;
 using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Services;
 using MasterMealMind.Infrastructure.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MasterMealMind.Web
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -22,8 +20,8 @@ namespace MasterMealMind.Web
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IGroceryService, GroceryService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
-            builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
 			builder.Services.AddScoped<IRecipeService, RecipeService>();
+			builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
 
 
 			var app = builder.Build();

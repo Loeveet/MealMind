@@ -1,6 +1,7 @@
 ﻿using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,11 @@ using System.Threading.Tasks;
 
 namespace MasterMealMind.Infrastructure.Services
 {
-	public class RecipeService : IRecipeService
+	public class RecipeService(MyDbContext context, ISearchService searchService) : IRecipeService
 	{
-		private readonly MyDbContext _context;
+		private readonly MyDbContext _context = context;
+		private readonly ISearchService _searchService = searchService;
 
-		public RecipeService(MyDbContext context)
-		{
-			_context = context;
-		}
 		public async Task<List<Recipe>> GetAsync()
 		{
 			var recipes = await _context.Recipes.ToListAsync() ?? [];
@@ -28,9 +26,25 @@ namespace MasterMealMind.Infrastructure.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<List<string>> GetTitlesAsync()
+		public async Task<List<string?>> GetTitlesAsync()
 		{
 			var recipes = await _context.Recipes.Select(x => x.Title).ToListAsync() ?? [];
+			return recipes;
+		}
+
+		public async Task<IEnumerable<Recipe>> GetTenAsync()
+		{
+			var firstTen = await _context.Recipes.Take(10).ToListAsync() ?? [];
+			return firstTen;
+		}
+
+		public async Task<IEnumerable<Recipe>> GetBasedOnSearchAsync()
+		{
+			var searchString = _searchService.GetSearchString();
+			var searchWords = searchString.Split(' ');
+			var recipes = await _context.Recipes
+				.Where(recipe => searchWords.All(word => recipe.Ingredients.Contains(word.ToLower())))
+				.ToListAsync();
 			return recipes;
 		}
 	}

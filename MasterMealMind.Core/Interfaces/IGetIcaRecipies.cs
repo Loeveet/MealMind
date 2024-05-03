@@ -9,6 +9,6 @@ namespace MasterMealMind.Core.Interfaces
 {
     public interface IGetIcaRecipies
     {
-        public Task<List<Recipe>> GetAsync();
+        public Task GetIcaAsync();
     }
 }

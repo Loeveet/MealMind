@@ -29,7 +29,7 @@ namespace MasterMealMind.Web.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Groceries = await _groceryService.GetAllAsync() ?? new List<Grocery>();
+            Groceries = await _groceryService.GetAllAsync() ?? [];
 
 			if (TempData.ContainsKey("EditedGrocery"))
 				NewGrocery = JsonConvert.DeserializeObject<Grocery>((string)TempData["EditedGrocery"]);
