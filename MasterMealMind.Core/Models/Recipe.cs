@@ -1,9 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace MasterMealMind.Core.Models
+﻿namespace MasterMealMind.Core.Models
 {
 
-	public class Recipe
+    public class Recipe
 	{
 		public int Id { get; set; }
         public string? Title { get; set; }

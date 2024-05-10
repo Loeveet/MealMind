@@ -20,7 +20,7 @@ namespace MasterMealMind.Web.Pages
             SearchString = _searchService.GetSearchString();
             if (SearchString == string.Empty)
             {
-                Recipes = await _recipeService.GetTenAsync();
+                Recipes = await _recipeService.GetAsync();
             }
             else
             {

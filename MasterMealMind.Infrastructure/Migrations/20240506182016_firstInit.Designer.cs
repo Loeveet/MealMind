@@ -3,6 +3,7 @@ using MasterMealMind.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterMealMind.Infrastructure.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240506182016_firstInit")]
+    partial class firstInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,25 @@ namespace MasterMealMind.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("MasterMealMind.Core.Models.FavouriteRecipe", b =>
+                {
+                    b.HasBaseType("MasterMealMind.Core.Models.Recipe");
+
+                    b.ToTable("FavouriteRecipes", (string)null);
+                });
+
+            modelBuilder.Entity("MasterMealMind.Core.Models.FavouriteRecipe", b =>
+                {
+                    b.HasOne("MasterMealMind.Core.Models.Recipe", null)
+                        .WithOne()
+                        .HasForeignKey("MasterMealMind.Core.Models.FavouriteRecipe", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -32,7 +32,7 @@
                                 <thead>
                                     <tr>
                                         <th class="col-md-3 col-sm-3">Titel</th> 
-                                        <th class="col-md-4 col-sm-4">Beskrivning</th>
+                                        <th class="col-md-4 col-sm-4">Göra så här</th>
                                         <th class="col-md-3 col-sm-3">Ingredienser</th>
                                         <th class="col-md-2 col-sm-2">@string.Empty</th>
                                     </tr>
@@ -47,7 +47,7 @@
                                                 </a>
                                             </td>
                                             <td class="col-md-4 col-sm-4">
-                                                <p>@recipe.Preamble?.ToString()</p>
+                                                <p>@recipe.Description?.ToString()</p>
                                             </td>
                                             <td class="col-md-3 col-sm-3">
                                                 @if (!string.IsNullOrEmpty(recipe.Ingredients))

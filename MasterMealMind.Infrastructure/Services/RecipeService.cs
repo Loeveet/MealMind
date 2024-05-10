@@ -32,13 +32,17 @@ namespace MasterMealMind.Infrastructure.Services
 			return recipes;
 		}
 
-		public async Task<IEnumerable<Recipe>> GetTenAsync()
-		{
-			var firstTen = await _context.Recipes.Take(10).ToListAsync() ?? [];
-			return firstTen;
-		}
+        public async Task<IEnumerable<Recipe>> GetTenAsync()
+        {
+            var randTen = await _context.Recipes
+                .OrderBy(x => Guid.NewGuid()) // Slumpa ordningen
+                .Take(10)
+                .ToListAsync(); 
+			
+			return randTen;
+        }
 
-		public async Task<IEnumerable<Recipe>> GetBasedOnSearchAsync()
+        public async Task<IEnumerable<Recipe>> GetBasedOnSearchAsync()
 		{
 			var searchString = _searchService.GetSearchString();
 			var searchWords = searchString.Split(' ');

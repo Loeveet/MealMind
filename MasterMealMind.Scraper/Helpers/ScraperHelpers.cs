@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace MasterMealMind.Scraper.Helpers
 {
-	public class ScraperHelpers
-	{
-		/*
+    public class ScraperHelpers
+    {
+        /*
 		DecodeHtml takes a string encoded with HTML characters and converts 
 		them into a readable format.
 		 
@@ -41,103 +41,125 @@ namespace MasterMealMind.Scraper.Helpers
 		Overall, this method is responsible for scraping recipe data from a web page and populating a 
 		list of recipe objects asynchronously.
 		 */
-		public static string DecodeHtml(string html)
-		{
-			return WebUtility.HtmlDecode(html);
-		}
+        public static string DecodeHtml(string html)
+        {
+            return WebUtility.HtmlDecode(html);
+        }
 
-		public static string UseRegex(string description)
-		{
-			//	var timerPattern = @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?";
-			//	var dotPattern = @"\.(?!\s)";
-			//	var nutritionPattern = @"Näringsvärde.*";
-			//	var newDesc = Regex.Replace(description, timerPattern, string.Empty);
-			//	newDesc = Regex.Replace(newDesc, dotPattern, ". ");
-			//	newDesc = Regex.Replace(newDesc, nutritionPattern, string.Empty);
+        public static string UseRegex(string description)
+        {
 
-			//	return newDesc;
+            var patterns = new Dictionary<string, string>
+            {
+                { @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?", string.Empty },
+                { @"\.(?!\s)", ". " },
+                { @"Näringsvärde.*", string.Empty }
+            };
 
-			var patterns = new Dictionary<string, string>
-			{
-				{ @"Öppna timer: \d+ min(uter)?(?: \d+ sek)?", string.Empty },
-				{ @"\.(?!\s)", ". " },
-				{ @"Näringsvärde.*", string.Empty }
-			};
+            foreach (var pattern in patterns)
+            {
+                description = Regex.Replace(description, pattern.Key, pattern.Value);
+            }
 
-			foreach (var pattern in patterns)
-			{
-				description = Regex.Replace(description, pattern.Key, pattern.Value);
-			}
+            return description;
 
-			return description;
+        }
 
-		}
+        public static string FilterIngredients(HtmlNodeCollection ingredientGroups)
+        {
 
-		public static string FilterIngredients(HtmlNodeCollection ingredientElements)
-		{
-			var ingredients = new List<string>();
+            var combinedList = new List<string>();
 
-			foreach (var ingredientElement in ingredientElements)
-			{
-				var ingredientText = DecodeHtml(ingredientElement.InnerText.Trim());
-				ingredientText = UseRegex(ingredientText);
-				if (!string.IsNullOrWhiteSpace(ingredientText))
-				{
-					ingredients.Add(DecodeHtml(ingredientText));
-				}
-			}
+            if (ingredientGroups != null)
+            {
+                foreach (var group in ingredientGroups)
+                {
+                    var headerNode = group.SelectSingleNode(".//h3[contains(@class, 'ingredients-list-group__heading')]");
+                    var ingredientNodes = group.SelectNodes(".//div[contains(@class, 'ingredients-list-group__card')]");
 
-			ingredients = ingredients.Distinct().ToList();
-			if (ingredients.Count > 0)
-			{
-				ingredients.RemoveAt(0);
-			}
+                    if (headerNode != null)
+                    {
+                        var headerText = DecodeHtml(headerNode.InnerText.Trim());
+                        combinedList.Add(headerText);
+                    }
 
-			return string.Join("| ", ingredients);
-		}
-		public static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
-		{
-			var recipe = new Recipe();
-			driver.Navigate().GoToUrl(recipeLink);
-			var httpClient = new HttpClient();
-			var html = await httpClient.GetStringAsync(recipeLink);
+                    if (ingredientNodes != null)
+                    {
+                        var ingredientsText = ingredientNodes
+                        .Select(ing =>
+                        {
+                            var quantityElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__qty')]");
+                            var ingredientNameElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__ingr')]");
 
-			var htmlDocument = new HtmlDocument();
-			htmlDocument.LoadHtml(html);
+                            if (ingredientNameElement != null)
+                            {
+                                string quantity = "";
+                                if (quantityElement != null)
+                                {
+                                    quantity = DecodeHtml(quantityElement.InnerText.Trim());
+                                }
 
-			var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
-			var title = titleElements.InnerText.Trim();
-			recipe.Title = DecodeHtml(title);
+                                var ingredientName = DecodeHtml(ingredientNameElement.InnerText.Trim());
+                                var ingredientText = string.IsNullOrWhiteSpace(quantity) ? ingredientName : $"{quantity} {ingredientName}";
+                                return UseRegex(ingredientText);
+                            }
+                            return null;
+                        })
+                        .ToList();
 
-			var preamElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__preamble')]");
-			var pream = preamElements.InnerText.Trim();
-			recipe.Preamble = DecodeHtml(pream);
+                        combinedList.AddRange(ingredientsText);
+                    }
+                }
+            }
 
-			var imgElement = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__desktop-image-wrapper__inner')]//img");
-			if (imgElement != null)
-			{
-				var imgUrl = imgElement.GetAttributeValue("src", "");
-				recipe.ImgURL = DecodeHtml(imgUrl);
-			}
-			else
-			{
-				recipe.ImgURL = null; // Lägg till sån här felhantering på alla proppar
-			}
+            string combinedIngredients = string.Join("| ", combinedList);
+            return combinedIngredients;
 
-			var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]//div");
+        }
+        public static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
+        {
+            var recipe = new Recipe();
+            driver.Navigate().GoToUrl(recipeLink);
+            var httpClient = new HttpClient();
+            var html = await httpClient.GetStringAsync(recipeLink);
 
-			if (ingredientElements != null)
-			{
-				string ingredients = FilterIngredients(ingredientElements);
-				recipe.Ingredients = string.Join(", ", ingredients);
-			}
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
 
-			var descElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
-			recipe.Description = DecodeHtml(descElements.InnerText.Trim());
-			recipe.Description = UseRegex(recipe.Description);
+            var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
+            var title = titleElements.InnerText.Trim();
+            recipe.Title = DecodeHtml(title);
 
-			recipes.Add(recipe);
-			await Task.Delay(1000);
-		}
-	}
+            var preamElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__preamble')]");
+            var pream = preamElements.InnerText.Trim();
+            recipe.Preamble = DecodeHtml(pream);
+
+            var imgElement = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__desktop-image-wrapper__inner')]//img");
+            if (imgElement != null)
+            {
+                var imgUrl = imgElement.GetAttributeValue("src", "");
+                recipe.ImgURL = DecodeHtml(imgUrl);
+            }
+            else
+            {
+                recipe.ImgURL = null; // Lägg till sån här felhantering på alla proppar
+            }
+
+            var combinedElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]");
+
+            if (combinedElements != null)
+            {
+                string ingredients = FilterIngredients(combinedElements);
+                recipe.Ingredients = ingredients;
+            }
+
+            var descElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
+            recipe.Description = DecodeHtml(descElements.InnerText.Trim());
+            recipe.Description = UseRegex(recipe.Description);
+
+            recipes.Add(recipe);
+            await Task.Delay(1500);
+        }
+
+    }
 }

@@ -41,7 +41,7 @@ namespace MasterMealMind.Scraper.Scrapers
                 }
 
                 int clickCount = 0;
-                int maxClicks = 1; // Ange det önskade antalet klick
+                int maxClicks = 20; // Ange det önskade antalet klick
 
                 while (clickCount < maxClicks)
                 {
@@ -51,7 +51,7 @@ namespace MasterMealMind.Scraper.Scrapers
                         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(false);", showMoreButton);
                         actions.MoveToElement(showMoreButton).Click().Perform();
                         clickCount++;
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
                     }
                     catch (NoSuchElementException)
                     {
