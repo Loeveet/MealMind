@@ -47,11 +47,20 @@
                                                 </a>
                                             </td>
                                             <td class="col-md-3 col-sm-3">
+                                                @{
+                                                    var stepCounter = 1;
+                                                }
                                                 @if (!string.IsNullOrEmpty(recipe.Description))
                                                 {
                                                     foreach (var desc in recipe.Description.Split('|'))
                                                     {
-                                                        <div>* @desc.Trim()</div>
+                                                        <div class="form-check" onclick="toggleCheckbox('@($"step{recipe.Id}_{stepCounter}")')">
+                                                            <input class="form-check-input" type="checkbox" id="@($"step{recipe.Id}_{stepCounter}")" name="step">
+                                                            <label class="form-check-label" for="@($"step{recipe.Id}_{stepCounter}")">
+                                                                @desc.Trim()
+                                                            </label>
+                                                        </div>
+                                                        stepCounter++;
                                                     }
                                                 }
                                             </td>
@@ -78,3 +87,10 @@
 		}
 	</div>
 </div>
+
+<script>
+    function toggleCheckbox(id) {
+        var checkbox = document.getElementById(id);
+        checkbox.checked = !checkbox.checked;
+    }
+</script>
