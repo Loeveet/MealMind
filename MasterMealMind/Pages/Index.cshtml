@@ -46,8 +46,14 @@
                                                     @recipe.Title
                                                 </a>
                                             </td>
-                                            <td class="col-md-4 col-sm-4">
-                                                <p>@recipe.Description?.ToString()</p>
+                                            <td class="col-md-3 col-sm-3">
+                                                @if (!string.IsNullOrEmpty(recipe.Description))
+                                                {
+                                                    foreach (var desc in recipe.Description.Split('|'))
+                                                    {
+                                                        <div>* @desc.Trim()</div>
+                                                    }
+                                                }
                                             </td>
                                             <td class="col-md-3 col-sm-3">
                                                 @if (!string.IsNullOrEmpty(recipe.Ingredients))

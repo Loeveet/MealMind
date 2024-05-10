@@ -41,7 +41,7 @@ namespace MasterMealMind.Scraper.Scrapers
                 }
 
                 int clickCount = 0;
-                int maxClicks = 20; // Ange det önskade antalet klick
+                int maxClicks = 0; // Ange det önskade antalet klick
 
                 while (clickCount < maxClicks)
                 {

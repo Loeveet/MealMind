@@ -116,6 +116,33 @@ namespace MasterMealMind.Scraper.Helpers
             return combinedIngredients;
 
         }
+        public static string FilterDescription(HtmlNodeCollection descriptionElement)
+        {
+            var steps = new List<string>();
+
+            if (descriptionElement != null)
+            {
+                var existingSteps = new HashSet<string>();
+
+                foreach (var stepNode in descriptionElement)
+                {
+                    var descriptionNode = stepNode.SelectSingleNode(".//div[contains(@class, 'cooking-steps-main__text')]");
+
+                    if (descriptionNode != null)
+                    {
+                        var descriptionText = DecodeHtml(descriptionNode.InnerText.Trim());
+                        var cleanedText = UseRegex(descriptionText);
+
+                        if (!existingSteps.Contains(cleanedText))
+                        {
+                            steps.Add(cleanedText);
+                            existingSteps.Add(cleanedText);
+                        }
+                    }
+                }
+            }
+            return string.Join(" | ", steps);
+        }
         public static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
         {
             var recipe = new Recipe();
@@ -126,40 +153,53 @@ namespace MasterMealMind.Scraper.Helpers
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
-            var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
-            var title = titleElements.InnerText.Trim();
-            recipe.Title = DecodeHtml(title);
-
-            var preamElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__preamble')]");
-            var pream = preamElements.InnerText.Trim();
-            recipe.Preamble = DecodeHtml(pream);
-
-            var imgElement = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__desktop-image-wrapper__inner')]//img");
-            if (imgElement != null)
-            {
-                var imgUrl = imgElement.GetAttributeValue("src", "");
-                recipe.ImgURL = DecodeHtml(imgUrl);
-            }
-            else
-            {
-                recipe.ImgURL = null; // Lägg till sån här felhantering på alla proppar
-            }
-
-            var combinedElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]");
-
-            if (combinedElements != null)
-            {
-                string ingredients = FilterIngredients(combinedElements);
-                recipe.Ingredients = ingredients;
-            }
-
-            var descElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
-            recipe.Description = DecodeHtml(descElements.InnerText.Trim());
-            recipe.Description = UseRegex(recipe.Description);
+            SetRecipeTitle(htmlDocument, recipe);
+            SetRecipePreamble(htmlDocument, recipe);
+            SetRecipeImageUrl(htmlDocument, recipe);
+            SetRecipeIngredients(htmlDocument, recipe);
+            SetRecipeDescription(htmlDocument, recipe);
 
             recipes.Add(recipe);
             await Task.Delay(1500);
         }
+        private static void SetRecipeTitle(HtmlDocument htmlDocument, Recipe recipe)
+        {
+            var titleElements = htmlDocument.DocumentNode.SelectSingleNode("//h1[contains(@class, 'recipe-header__title') or contains(@class, 'recipe-header__title--long-words')]");
+            recipe.Title = titleElements?.InnerText.Trim();
+        }
 
+        private static void SetRecipePreamble(HtmlDocument htmlDocument, Recipe recipe)
+        {
+            var preamElements = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__preamble')]");
+            recipe.Preamble = preamElements?.InnerText.Trim();
+        }
+
+        private static void SetRecipeImageUrl(HtmlDocument htmlDocument, Recipe recipe)
+        {
+            var imgElement = htmlDocument.DocumentNode.SelectSingleNode("//div[contains(@class, 'recipe-header__desktop-image-wrapper__inner')]//img");
+            recipe.ImgURL = imgElement?.GetAttributeValue("src", "");
+        }
+
+        private static void SetRecipeIngredients(HtmlDocument htmlDocument, Recipe recipe)
+        {
+            var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]");
+
+            if (ingredientElements != null)
+            {
+                string ingredients = FilterIngredients(ingredientElements);
+                recipe.Ingredients = ingredients;
+            }
+        }
+
+        private static void SetRecipeDescription(HtmlDocument htmlDocument, Recipe recipe)
+        {
+            var descElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
+
+            if (descElements != null)
+            {
+                var descriptions = FilterDescription(descElements);
+                recipe.Description = descriptions;
+            }
+        }
     }
 }
