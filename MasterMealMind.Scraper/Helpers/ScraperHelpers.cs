@@ -80,7 +80,7 @@ namespace MasterMealMind.Scraper.Helpers
                     if (headerNode != null)
                     {
                         var headerText = DecodeHtml(headerNode.InnerText.Trim());
-                        combinedList.Add(headerText);
+                        combinedList.Add("*" + headerText);
                     }
 
                     if (ingredientNodes != null)

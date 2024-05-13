@@ -3,7 +3,6 @@ using MasterMealMind.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,11 +10,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterMealMind.Infrastructure.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240506182016_firstInit")]
-    partial class firstInit
+    partial class MyDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,6 +20,34 @@ namespace MasterMealMind.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MasterMealMind.Core.Models.FavouriteRecipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ingredients")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Preamble")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FavouriteRecipes", (string)null);
+                });
 
             modelBuilder.Entity("MasterMealMind.Core.Models.Grocery", b =>
                 {
@@ -78,24 +103,6 @@ namespace MasterMealMind.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recipes", (string)null);
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("MasterMealMind.Core.Models.FavouriteRecipe", b =>
-                {
-                    b.HasBaseType("MasterMealMind.Core.Models.Recipe");
-
-                    b.ToTable("FavouriteRecipes", (string)null);
-                });
-
-            modelBuilder.Entity("MasterMealMind.Core.Models.FavouriteRecipe", b =>
-                {
-                    b.HasOne("MasterMealMind.Core.Models.Recipe", null)
-                        .WithOne()
-                        .HasForeignKey("MasterMealMind.Core.Models.FavouriteRecipe", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

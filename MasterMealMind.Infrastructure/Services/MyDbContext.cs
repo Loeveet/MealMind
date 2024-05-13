@@ -13,7 +13,12 @@ namespace MasterMealMind.Infrastructure.Services
         {
             modelBuilder.Entity<Recipe>().ToTable("Recipes");
             modelBuilder.Entity<FavouriteRecipe>().ToTable("FavouriteRecipes");
-        }
+
+			modelBuilder.Entity<FavouriteRecipe>()
+				.Property(fr => fr.Id)
+				.ValueGeneratedOnAdd()
+				.UseIdentityColumn();
+		}
 
     }
 }

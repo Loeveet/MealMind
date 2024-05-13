@@ -22,6 +22,7 @@ namespace MasterMealMind.Web
             builder.Services.AddScoped<ISearchService, SearchService>();
 			builder.Services.AddScoped<IRecipeService, RecipeService>();
 			builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
+			builder.Services.AddScoped<IFavouriteRecipeService, FavouriteRecipeService>();
 
 
 			var app = builder.Build();

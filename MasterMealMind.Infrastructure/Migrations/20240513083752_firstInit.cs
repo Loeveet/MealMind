@@ -11,6 +11,23 @@ namespace MasterMealMind.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "FavouriteRecipes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Preamble = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteRecipes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groceries",
                 columns: table => new
                 {
@@ -42,23 +59,6 @@ namespace MasterMealMind.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FavouriteRecipes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Preamble = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FavouriteRecipes", x => x.Id);
                 });
         }
 
