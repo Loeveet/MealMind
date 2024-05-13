@@ -1,4 +1,6 @@
-﻿namespace MasterMealMind.Core.Models
+﻿using System.Reflection.Metadata;
+
+namespace MasterMealMind.Core.Models
 {
     public class FavouriteRecipe
     {
@@ -8,5 +10,6 @@
 		public string? Preamble { get; set; }
 		public string? ImgURL { get; set; }
 		public string? Ingredients { get; set; }
-	}
+        public int? RecipeId { get; set; }
+    }
 }

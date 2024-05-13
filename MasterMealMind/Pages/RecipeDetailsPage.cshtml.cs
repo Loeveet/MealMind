@@ -1,21 +1,28 @@
+using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MasterMealMind.Web.Pages
 {
-    public class RecipeDetailsPageModel : PageModel
+    public class RecipeDetailsPageModel(IFavouriteRecipeService favouriteRecipeService, IRecipeService recipeService) : PageModel
     {
-        
+        private readonly IFavouriteRecipeService _favouriteRecipeService = favouriteRecipeService;
+        private readonly IRecipeService _recipeService = recipeService;
 
-        public Recipe Recipe { get; set; }
-        public RecipeDetailsPageModel()
+        public Recipe? Recipe { get; set; }
+        public FavouriteRecipe? FavouriteRecipe { get; set; }
+        public async Task<IActionResult> OnGetAsync(int recipeId, string source)
         {
-            
-        }
-        public async Task<IActionResult> OnGetAsync(int recipeId)
-        {
-            // Recipe = await _icaAPIService.GetOneRecipe(recipeId);
+
+			if (source == "recipes")
+            {
+                Recipe = await _recipeService.GetOneAsync(recipeId);
+            }
+            else if (source == "favourites")
+            {
+                FavouriteRecipe = await _favouriteRecipeService.GetOneAsync(recipeId);
+            }
             return Page();
         }
     }

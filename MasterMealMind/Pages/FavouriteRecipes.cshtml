@@ -1,7 +1,6 @@
 ﻿@page
-@model IndexModel
+@model MasterMealMind.Web.Pages.FavouriteRecipesModel
 @{
-	ViewData["Title"] = "Home page";
 	@functions {
 		string FormatingIngredient(string ingredient)
 		{
@@ -28,23 +27,13 @@
 	<div class="text-start">
 		<div class="row">
 			<div class="form-group col-md-10">
-				<h4>@(string.IsNullOrEmpty(Model.SearchString) ? "Receptförslag" : "Receptförslag på " + Model.SearchString)</h4>
-			</div>
-			<div class="form-group col-md-2">
-				<form method="post" asp-page-handler="EmptySearch">
-					<button class="btn btn-secondary" type="submit">Töm sökning</button>
-				</form>
-			</div>
-			<div class="form-group col-md-2">
-				<form method="post" asp-page-handler="LoadRecipes">
-					<button class="btn btn-secondary" type="submit">Ladda recept</button>
-				</form>
+				<h4>Favoritrecept</h4>
 			</div>
 		</div>
 
-		@if (Model.Recipes != null)
+		@if (Model.FavouriteRecipes != null)
 		{
-			<p>@Model.Recipes.Count()</p>
+			<p>@Model.FavouriteRecipes.Count()</p>
 			<div class="container">
 				<div class="row">
 					<div class="col">
@@ -60,19 +49,19 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach (var recipe in Model.Recipes)
+									@foreach (var recipe in Model.FavouriteRecipes)
 									{
 										<tr>
 											<td>
 												<div class="form-group">
-													<form method="post" asp-page-handler="AddToFavourites">
-														<input type="hidden" name="recipeId" value="@recipe.Id"/>
-														<button class="btn-sm btn-primary" type="submit">Favorit</button>
+													<form method="post" asp-page-handler="RemoveFromFavourites">
+														<input type="hidden" name="recipeId" value="@recipe.Id" />
+														<button class="btn-sm btn-danger" type="submit">Remove</button>
 													</form>
 												</div>
 											</td>
 											<td class="col-md-3 col-sm-3">
-												<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id" asp-route-source="recipes">
+												<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id" asp-route-source="favourites">
 													@recipe.Title
 												</a>
 											</td>

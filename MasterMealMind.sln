@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Core", "Mast
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Infrastructure", "MasterMealMind.Infrastructure\MasterMealMind.Infrastructure.csproj", "{4A985C93-9939-4A32-A14A-41E4D005618D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterMealMind.Scraper", "MasterMealMind.Scraper\MasterMealMind.Scraper.csproj", "{88FB93F4-B254-4F17-8263-33E3DC441C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterMealMind.Scraper", "MasterMealMind.Scraper\MasterMealMind.Scraper.csproj", "{88FB93F4-B254-4F17-8263-33E3DC441C26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

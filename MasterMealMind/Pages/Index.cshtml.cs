@@ -45,7 +45,10 @@ namespace MasterMealMind.Web.Pages
 		}
 		public async Task<IActionResult> OnPostAddToFavourites(int recipeId)
 		{
-            await _favouriteRecipeService.AddAsync(recipeId);
+            if (await _favouriteRecipeService.ExistsAsync(recipeId))
+				return RedirectToPage();
+
+			await _favouriteRecipeService.AddAsync(recipeId);
 			return RedirectToPage();
 
 		}

@@ -2,6 +2,7 @@
 using MasterMealMind.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,5 +52,11 @@ namespace MasterMealMind.Infrastructure.Services
 				.ToListAsync();
 			return recipes;
 		}
-	}
+
+        public async Task<Recipe> GetOneAsync(int recipeId)
+        {
+            var recipe = await _context.Recipes.FindAsync(recipeId) ?? throw new NotFoundException();
+            return recipe;
+        }
+    }
 }

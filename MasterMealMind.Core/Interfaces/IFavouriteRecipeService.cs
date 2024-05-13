@@ -10,7 +10,10 @@ namespace MasterMealMind.Core.Interfaces
 	public interface IFavouriteRecipeService
 	{
 		Task AddAsync(int recipeId);
-		//Task<List<Recipe>> GetAsync();
+		Task<IEnumerable<FavouriteRecipe>> GetAsync();
+		Task RemoveAsync(int recipeId);
+		Task<bool> ExistsAsync(int recipeId);
+		Task<FavouriteRecipe> GetOneAsync(int recipeId);
 		//Task<List<string?>> GetTitlesAsync();
 		//Task AddAsync(List<Recipe> recipes);
 		//Task<IEnumerable<Recipe>> GetTenAsync();

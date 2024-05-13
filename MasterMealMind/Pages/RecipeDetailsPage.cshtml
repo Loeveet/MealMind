@@ -1,20 +1,40 @@
 ﻿@page
 @model MasterMealMind.Web.Pages.RecipeDetailsPageModel
 @{
+    @functions {
+        string FormatingIngredient(string ingredient)
+        {
+            var trimmedIngredient = ingredient.Trim();
+            var isHeader = trimmedIngredient.StartsWith("*");
 
+            if (isHeader)
+            {
+                return $"<strong>{trimmedIngredient.Substring(1)}</strong>";
+            }
+            else if (!string.IsNullOrEmpty(trimmedIngredient))
+            {
+                var firstLetterUpperCase = char.ToUpper(trimmedIngredient[0]) + trimmedIngredient.Substring(1);
+                return firstLetterUpperCase;
+            }
+            else
+            {
+                return trimmedIngredient;
+            }
+        }
+    }
 }
-@if (Model.Recipe != null)
+@if (Model.FavouriteRecipe != null)
 {
-@*     <div class="card">
+     <div class="card">
         <div class="row no-gutters">
             <div class="col-md-6">
                 <div class="card-body">
-                    <h4 class="card-title">@Model.Recipe.Title</h4>
-                    <p class="card-text">@Html.Raw(Model.Recipe.PreambleHTML)</p> 
+                    <h4 class="card-title">@Model.FavouriteRecipe.Title</h4>
+                    <p class="card-text">@Html.Raw(Model.FavouriteRecipe.Preamble)</p>
                 </div>
             </div>
              <div class="col-md-6">
-                <img src="@Model.Recipe.ImageUrl" class="card-img" alt="Recipe Image" width="100">
+                <img src="@Model.FavouriteRecipe.ImgURL" class="card-img" alt="Recipe Image" width="100">
             </div>
         </div>
     </div>
@@ -23,38 +43,100 @@
     <div class="row">
         <div class="col-6">
             <table class="table table-striped border" aria-label="" aria-hidden="true">
-                @foreach (var ingredientGroup in Model.Recipe)
-                {
-                    @if (ingredientGroup.GroupName != null)
-                    {
-                        <tr>
-                            <td>
-                                <h5>@ingredientGroup.GroupName</h5>
-                            </td>
-                        </tr>
-                    }
-                    foreach (var ingredient in ingredientGroup.Ingredients)
-                    {
-                        <tr>
-                            <td>
-                                @ingredient.Text
-                            </td>
-                        </tr>
-                    }
-                }
+                <tr>
+                    <td class="col-md-3 col-sm-3">
+                        @if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Ingredients))
+                        {
+                            foreach (var ingredient in Model.FavouriteRecipe.Ingredients.Split('|'))
+                            {
+                                <div>@Html.Raw(@FormatingIngredient(ingredient))</div>
+                            }
+                        }
+                    </td>
+                </tr>
             </table>
         </div>
         <div class="col-6">
             <h5>Steg för steg:</h5>
             <br />
-            <ol>
-                @foreach (var steps in Model.Recipe.CookingSteps)
+            @{
+                var stepCounter = 1;
+            }
+            @if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Description))
+            {
+                foreach (var desc in Model.FavouriteRecipe.Description.Split('|'))
                 {
-                    <li>
-                        @Html.Raw(steps)
-                    </li>
+                    <div class="form-check" onclick="toggleCheckbox('@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")')">
+                        <input class="form-check-input" type="checkbox" id="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")" name="step">
+                        <label class="form-check-label" for="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")">
+                            @desc.Trim()
+                        </label>
+                    </div>
+                    stepCounter++;
                 }
-            </ol>
+            }
         </div>
-    </div> *@
+    </div> 
 }
+else if (Model.Recipe != null)
+{
+    <div class="card">
+        <div class="row no-gutters">
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h4 class="card-title">@Model.Recipe.Title</h4>
+                    <p class="card-text">@Html.Raw(Model.Recipe.Preamble)</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="@Model.Recipe.ImgURL" class="card-img" alt="Recipe Image" width="100">
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-striped border" aria-label="" aria-hidden="true">
+                <tr>
+                    <td class="col-md-3 col-sm-3">
+                        @if (!string.IsNullOrEmpty(Model.Recipe.Ingredients))
+                        {
+                            foreach (var ingredient in Model.Recipe.Ingredients.Split('|'))
+                            {
+                                <div>@Html.Raw(@FormatingIngredient(ingredient))</div>
+                            }
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            <h5>Steg för steg:</h5>
+            <br />
+            @{
+                var stepCounter = 1;
+            }
+            @if (!string.IsNullOrEmpty(Model.Recipe.Description))
+            {
+                foreach (var desc in Model.Recipe.Description.Split('|'))
+                {
+                    <div class="form-check" onclick="toggleCheckbox('@($"step{Model.Recipe.Id}_{stepCounter}")')">
+                        <input class="form-check-input" type="checkbox" id="@($"step{Model.Recipe.Id}_{stepCounter}")" name="step">
+                        <label class="form-check-label" for="@($"step{Model.Recipe.Id}_{stepCounter}")">
+                            @desc.Trim()
+                        </label>
+                    </div>
+                    stepCounter++;
+                }
+            }
+        </div>
+    </div>
+}
+
+<script>
+    function toggleCheckbox(id) {
+        var checkbox = document.getElementById(id);
+        checkbox.checked = !checkbox.checked;
+    }
+</script>
