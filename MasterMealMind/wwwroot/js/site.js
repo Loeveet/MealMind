@@ -1,4 +1,8 @@
-﻿
+﻿function toggleCheckbox(id) {
+	var checkbox = document.getElementById(id);
+	checkbox.checked = !checkbox.checked;
+}
+
 let selectedIds = [];
 let checkboxes = document.querySelectorAll('.product-checkbox');
 function updateSelectedIds() {
@@ -29,3 +33,23 @@ checkboxes.forEach(function (checkbox) {
 		updateSelectedIds();
 	});
 });
+
+	$(document).ready(function() {
+		// När knappen klickas, gör ingredienserna redigerbara
+		$("#editIngredientsBtn").click(function () {
+			$(".ingredient").attr("contenteditable", "true");
+			// Visa en annan knapp för att spara ändringarna
+			$(this).hide();
+			$("#saveIngredientsBtn").show();
+		});
+
+	// Funktion för att spara ändringar och avsluta redigeringen
+	$("#saveIngredientsBtn").click(function() {
+		$(".ingredient").removeAttr("contenteditable");
+	// Göm spara-knappen och visa redigeringsknappen igen
+	$(this).hide();
+	$("#editIngredientsBtn").show();
+            // Spara ändringarna, du kan här anropa en funktion eller göra en AJAX-förfrågan till servern för att spara ändringarna
+        });
+    });
+

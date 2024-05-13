@@ -1,27 +1,8 @@
 ﻿@page
+@using MasterMealMind.Web.Helpers;
 @model MasterMealMind.Web.Pages.FavouriteRecipesModel
 @{
-	@functions {
-		string FormatingIngredient(string ingredient)
-		{
-			var trimmedIngredient = ingredient.Trim();
-			var isHeader = trimmedIngredient.StartsWith("*");
 
-			if (isHeader)
-			{
-				return $"<strong>{trimmedIngredient.Substring(1)}</strong>";
-			}
-			else if (!string.IsNullOrEmpty(trimmedIngredient))
-			{
-				var firstLetterUpperCase = char.ToUpper(trimmedIngredient[0]) + trimmedIngredient.Substring(1);
-				return firstLetterUpperCase;
-			}
-			else
-			{
-				return trimmedIngredient;
-			}
-		}
-	}
 }
 <div class="container">
 	<div class="text-start">
@@ -88,7 +69,7 @@
 												{
 													foreach (var ingredient in recipe.Ingredients.Split('|'))
 													{
-														<div>@Html.Raw(@FormatingIngredient(ingredient))</div>
+														<div>@Html.Raw(IngredientFormatter.FormatingIngredient(ingredient))</div>
 													}
 												}
 											</td>
@@ -106,10 +87,3 @@
 		}
 	</div>
 </div>
-
-<script>
-	function toggleCheckbox(id) {
-		var checkbox = document.getElementById(id);
-		checkbox.checked = !checkbox.checked;
-	}
-</script>
