@@ -53,5 +53,11 @@ namespace MasterMealMind.Infrastructure.Services
 			_context.FavouriteRecipes.Remove(recipe);
 			await _context.SaveChangesAsync();
 		}
+
+		public async Task UpdateAsync(FavouriteRecipe recipe)
+		{
+			_context.FavouriteRecipes.Update(recipe);
+			await _context.SaveChangesAsync();
+		}
 	}
 }

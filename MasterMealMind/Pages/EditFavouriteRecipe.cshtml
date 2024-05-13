@@ -1,0 +1,66 @@
+﻿@page
+@using MasterMealMind.Web.Helpers;
+@model MasterMealMind.Web.Pages.EditFavouriteRecipeModel
+@{
+}
+@if (Model.FavouriteRecipe != null)
+{
+	<div class="card">
+		<div class="row no-gutters">
+			<div class="col-md-6">
+				<div class="card-body">
+					<h4 class="card-title">@Model.FavouriteRecipe.Title</h4>
+					<p class="card-text">@Html.Raw(Model.FavouriteRecipe.Preamble)</p>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<img src="@Model.FavouriteRecipe.ImgURL" class="card-img" alt="Recipe Image" width="100">
+			</div>
+		</div>
+	</div>
+
+	<br />
+	<div class="row">
+		<div class="col-6">
+			<h5>Redigera ingredienser: </h5>
+			<form method="post" asp-page-handler="UpdateIngredients" id="ingredients">
+				<input type="hidden" asp-for="FavouriteRecipe.Id" />
+				<div id="ingredients" contenteditable="false">
+					<table class="table table-striped border" aria-label="" aria-hidden="true">
+						@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Ingredients))
+						{
+							var ingredients = Model.FavouriteRecipe.Ingredients.Split('|');
+							for (var i = 0; i < ingredients.Length; i++)
+							{
+								<div class="p-1">
+									<input type="text" name="FavouriteRecipe.Ingredients[]" value="@ingredients[i]" class="form-control" />
+								</div>
+							}
+						}
+					</table>
+				</div>
+				<button type="submit" class="btn btn-primary">Spara ändringar</button>
+			</form>
+		</div>
+		<div class="col-6">
+			<h5>Steg för steg:</h5>
+			<br />
+			@{
+				var stepCounter = 1;
+			}
+			@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Description))
+			{
+				foreach (var desc in Model.FavouriteRecipe.Description.Split('|'))
+				{
+					<div class="form-check" onclick="toggleCheckbox('@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")')">
+						<input class="form-check-input" type="checkbox" id="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")" name="step">
+						<label class="form-check-label" for="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")">
+							@desc.Trim()
+						</label>
+					</div>
+					stepCounter++;
+				}
+			}
+		</div>
+	</div>
+}
