@@ -5,9 +5,6 @@ jobs:
   run-custom-method:
     runs-on: ubuntu-latest
     
-    defaults:
-      run: 
-        working-directory: ./MealMind
 
     steps:
       - name: Checkout code
@@ -25,4 +22,4 @@ jobs:
         run: dotnet build --configuration Release --no-restore
         
       - name: Run custom method
-        run: dotnet run --project /MasterMealMind --no-build --method RunScraper
+        run: dotnet run --project ./MasterMealMind --no-build --method RunScraper
