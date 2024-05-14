@@ -11,22 +11,9 @@ namespace MasterMealMind.Infrastructure.Services
     {
         private static string? _searchString;
 
-        public string GetSearchString()
-        {
-            if (_searchString == null)
-                _searchString = string.Empty;
+        public string GetSearchString() => _searchString ??= string.Empty;
+        public void SetSearchString(string searchString) => _searchString = searchString;
+        public void ClearSearchString() => _searchString = string.Empty;
 
-            return _searchString;
-        }
-
-        public void SetSearchString(string searchString)
-        {
-            _searchString = searchString;
-        }
-
-        public void ClearSearchString()
-        {
-            _searchString = string.Empty;
-        }
     }
 }

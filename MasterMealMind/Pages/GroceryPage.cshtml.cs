@@ -9,23 +9,17 @@ using MasterMealMind.Core.Services;
 
 namespace MasterMealMind.Web.Pages
 {
-    public class GroceryPageModel : PageModel
+    public class GroceryPageModel(IGroceryService groceryService, ISearchService searchService) : PageModel
     {
-        private readonly IGroceryService _groceryService;
-        private readonly ISearchService _searchService;
+        private readonly IGroceryService _groceryService = groceryService;
+        private readonly ISearchService _searchService = searchService;
 
-        public List<Grocery> Groceries { get; set; }
+        public IEnumerable<Grocery> Groceries { get; set; }
 
         [BindProperty]
         public Grocery NewGrocery { get; set; }
 		public Grocery EditGrocery { get; set; }
 
-
-		public GroceryPageModel(IGroceryService groceryService, ISearchService searchService)
-        {
-            _groceryService = groceryService;
-            _searchService = searchService;
-        }
 
         public async Task<IActionResult> OnGetAsync()
         {

@@ -19,16 +19,17 @@ namespace MasterMealMind.Web.Pages
 		public string? SearchString { get; set; }
         public IEnumerable<Recipe> Recipes { get; set; } = [];
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string searchWord)
         {
             SearchString = _searchService.GetSearchString();
-            if (SearchString == string.Empty)
+            if(SearchString != string.Empty || searchWord != null) 
             {
-                Recipes = await _recipeService.GetAsync();
-            }
-            else
+                Recipes = await _recipeService.GetBasedOnSearchAsync(searchWord);
+				SearchString = _searchService.GetSearchString();
+			}
+			else
             {
-                Recipes = await _recipeService.GetBasedOnSearchAsync();
+                Recipes = await _recipeService.GetTenAsync();
             }
             return Page();
         }

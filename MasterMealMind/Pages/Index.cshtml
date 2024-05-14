@@ -1,5 +1,6 @@
 ﻿@page
 @using MasterMealMind.Web.Helpers;
+@using MasterMealMind.Infrastructure.Services;
 @model IndexModel
 @{
 	ViewData["Title"] = "Home page";
@@ -12,13 +13,28 @@
 				<h4>@(string.IsNullOrEmpty(Model.SearchString) ? "Receptförslag" : "Receptförslag på " + Model.SearchString)</h4>
 			</div>
 			<div class="form-group col-md-2">
-				<form method="post" asp-page-handler="EmptySearch">
-					<button class="btn btn-secondary" type="submit">Töm sökning</button>
-				</form>
-			</div>
-			<div class="form-group col-md-2">
 				<form method="post" asp-page-handler="LoadRecipes">
 					<button class="btn btn-secondary" type="submit">Ladda recept</button>
+				</form>
+			</div>
+			@if (!string.IsNullOrEmpty(Model.SearchString))
+			{
+				<div class="form-group col-md-2">
+					<form method="post" asp-page-handler="EmptySearch">
+						<button class="btn btn-secondary" type="submit">Töm sökning</button>
+					</form>
+				</div>
+			}
+			
+			<div>
+				<form method="get">
+					<div class="input-group">
+						<input type="text" name="searchWord" class="form-control col-2 mr-1" placeholder="Sök efter recept..." />
+						<div class="input-group-append">
+							<button type="submit" id="searchButton" class="btn btn-primary">Sök</button>
+
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -47,7 +63,7 @@
 											<td>
 												<div class="form-group">
 													<form method="post" asp-page-handler="AddToFavourites">
-														<input type="hidden" name="recipeId" value="@recipe.Id"/>
+														<input type="hidden" name="recipeId" value="@recipe.Id" />
 														<button class="btn-sm btn-primary" type="submit">Favorit</button>
 													</form>
 												</div>

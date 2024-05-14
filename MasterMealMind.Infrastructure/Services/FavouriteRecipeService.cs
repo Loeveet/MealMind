@@ -30,22 +30,11 @@ namespace MasterMealMind.Infrastructure.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<bool> ExistsAsync(int recipeId)
-		{
-			return await _context.FavouriteRecipes.AnyAsync(x => x.RecipeId == recipeId);
-		}
+		public async Task<bool> ExistsAsync(int recipeId) => await _context.FavouriteRecipes.AnyAsync(x => x.RecipeId == recipeId);
 
-		public async Task<IEnumerable<FavouriteRecipe>> GetAsync()
-		{
-			var favouriteRecipes = await _context.FavouriteRecipes.ToListAsync() ?? [];
-			return favouriteRecipes;
-		}
+		public async Task<IEnumerable<FavouriteRecipe>> GetAsync() => await _context.FavouriteRecipes.ToListAsync() ?? [];
 
-        public async Task<FavouriteRecipe> GetOneAsync(int recipeId)
-        {
-            var recipe = await _context.FavouriteRecipes.FindAsync(recipeId) ?? throw new NotFoundException();
-            return recipe;
-        }
+        public async Task<FavouriteRecipe> GetOneAsync(int recipeId) => await _context.FavouriteRecipes.FindAsync(recipeId) ?? throw new NotFoundException();
 
         public async Task RemoveAsync(int recipeId)
 		{

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Reflection.Metadata.Ecma335;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using OpenQA.Selenium;
 
 namespace MasterMealMind.Infrastructure.Services
 {
@@ -13,20 +14,9 @@ namespace MasterMealMind.Infrastructure.Services
 	{
 		private readonly MyDbContext _context = context;
 
-		public async Task<List<Grocery>> GetAllAsync()
-		{
-			return await _context.Groceries.ToListAsync();
-		}
+		public async Task<IEnumerable<Grocery>> GetAllAsync() => await _context.Groceries.ToListAsync() ?? [];
 
-		public async Task<Grocery> GetOneAsync(int id)
-		{
-            var grocery = await _context.Groceries.SingleOrDefaultAsync(g => g.Id == id);
-
-            if (grocery == null)
-                throw new InvalidOperationException($"Grocery with ID {id} not found.");
-
-            return grocery;
-        }
+		public async Task<Grocery> GetOneAsync(int id) => await _context.Groceries.FindAsync(id) ?? throw new NotFoundException();
 
 		public async Task AddOrUpdateAsync(Grocery modifiedGrocery)
 		{
@@ -46,7 +36,6 @@ namespace MasterMealMind.Infrastructure.Services
 
 		public async Task UpdateAsync(Grocery grocery)
 		{
-
 			var groceryToUpdate = await _context.Groceries.FirstOrDefaultAsync(g => string.Equals(g.Name, grocery.Name, StringComparison.OrdinalIgnoreCase)) ?? throw new ArgumentNullException("updateGrocery");
 			var updatedGrocery = GetGroceryToUpdate(grocery, groceryToUpdate);
 			_context.Entry(updatedGrocery).State = EntityState.Modified;
@@ -55,25 +44,14 @@ namespace MasterMealMind.Infrastructure.Services
 
 		public async Task DeleteAsync(int id)
 		{
-			var grocery = await _context.Groceries.FindAsync(id);
-
-			if (grocery == null)
-			{
-				throw new InvalidOperationException();
-			}
+			var grocery = await _context.Groceries.FindAsync(id) ?? throw new InvalidOperationException();
 			_context.Groceries.Remove(grocery);
 			_context.SaveChanges();
-
 		}
 
-		public async Task<bool> GroceryExistsAsync(int id)
-		{
-			return await _context.Groceries.AnyAsync(g => g.Id == id);
-		}
-		public async Task<bool> GroceryExistsAsync(string name)
-		{
-			return await _context.Groceries.AnyAsync(g => g.Name == name);
-		}
+		public async Task<bool> GroceryExistsAsync(int id) => await _context.Groceries.AnyAsync(g => g.Id == id);
+
+		public async Task<bool> GroceryExistsAsync(string name) => await _context.Groceries.AnyAsync(g => g.Name == name);
 
 		public Grocery GetGroceryToUpdate(Grocery updatedGrocery, Grocery originalGrocery)
 		{

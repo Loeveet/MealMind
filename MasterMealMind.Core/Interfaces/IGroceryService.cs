@@ -4,7 +4,7 @@ namespace MasterMealMind.Core.Services
 {
     public interface IGroceryService
     {
-		Task<List<Grocery>> GetAllAsync();
+		Task<IEnumerable<Grocery>> GetAllAsync();
 
         Task<Grocery> GetOneAsync(int id);
 
