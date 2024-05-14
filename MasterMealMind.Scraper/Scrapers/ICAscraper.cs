@@ -11,25 +11,23 @@ namespace MasterMealMind.Scraper.Scrapers
 {
     public class ICAscraper
     {
-        public async Task<List<Recipe>> GetAsync()
+        public async Task<List<Recipe>> GetAsync(string url)
         {
             var recipes = new List<Recipe>();
             var options = new ChromeOptions();
             options.AddArgument("--headless");
 
-            // Instansiera Chrome WebDriver
+            // Instantiate Chrome WebDriver
             using (var driver = new ChromeDriver(options))
             {
-                // Navigera till webbplatsen med recept
-                driver.Navigate().GoToUrl("https://www.ica.se/recept/");
+                driver.Navigate().GoToUrl(url);
                 var actions = new Actions(driver);
 
-                // Lista för att lagra recept
                 var recipeLinks = new List<string>();
 
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
-                // Hitta och klicka på knappen för att acceptera cookies
+                // Find and push button for accepting cookies
                 try
                 {
                     var acceptCookiesButton = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), 'Godkänn kakor')]")));
@@ -40,10 +38,11 @@ namespace MasterMealMind.Scraper.Scrapers
                     Console.WriteLine("Cookiespopup-button not found.");
                 }
 
-                int clickCount = 0;
-                int maxClicks = 0; // Ange det önskade antalet klick
+                var clickCount = 0;
+                var wantedClicks = 0;
 
-                while (clickCount < maxClicks)
+                //Find and click "show more" a number of times to load recipes
+                while (clickCount < wantedClicks)
                 {
                     try
                     {
@@ -59,15 +58,14 @@ namespace MasterMealMind.Scraper.Scrapers
                     }
 
                 }
-
-                // Hitta länkarna till varje enskilt recept efter att alla sidor har laddats
+                //Find links for individually recipe after all pages has loaded
                 var recipeElements = driver.FindElements(By.XPath("//a[contains(@class, 'recipe-card__content__title font-rubrik-2--mid')]"));
                 foreach (var element in recipeElements)
                 {
                     recipeLinks.Add(element.GetAttribute("href"));
                 }
 
-                // Skrapa varje recept i flera trådar
+                // Scrape all recipes i different threads at the same time
                 await Task.WhenAll(recipeLinks.Select(link => ScraperHelpers.ProcessRecipeAsync(driver, link, recipes)));
 
                 return recipes;

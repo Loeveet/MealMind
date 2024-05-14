@@ -37,7 +37,7 @@ namespace MasterMealMind.Infrastructure.Services
 			if(searchString == string.Empty)
 				_searchService.SetSearchString(input);
 			var recipes = await _context.Recipes
-				.Where(recipe => searchWords.All(word => recipe.Ingredients.Contains(word.ToLower())))
+				.Where(recipe => searchWords.All(word => recipe.Ingredients.Contains(word.ToLower()) || recipe.Title.Contains(word.ToLower())))
 				.ToListAsync();
 			return recipes;
 		}
