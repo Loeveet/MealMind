@@ -4,6 +4,10 @@ on:
 jobs:
   run-custom-method:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run: 
+        working-directory: ./MasterMealMind
 
     steps:
       - name: Checkout code
