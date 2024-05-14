@@ -27,5 +27,5 @@ jobs:
           ls -al
 
       - name: Run custom method
-        run: dotnet run --project ./MealMind/MasterMealMind/MasterMealMind.Web.csproj --method RunScraper
+        run: dotnet run --project ./MealMind/MasterMealMind/ --method RunScraper
 
