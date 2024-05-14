@@ -27,5 +27,5 @@ jobs:
           ls -al
 
       - name: Run custom method
-        run: dotnet run --project ./MasterMealMind/MasterMealMind.Web.csproj --method RunScraper --connection-string ${{ secrets.DefaultConnection }}
+        run: dotnet run --project ./MasterMealMind/MasterMealMind.Web.csproj --method RunScraper --connection-string ${{ secrets.DEFAULTCONNECTION }}
 
