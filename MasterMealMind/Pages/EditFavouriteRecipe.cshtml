@@ -5,26 +5,36 @@
 }
 @if (Model.FavouriteRecipe != null)
 {
-	<div class="card">
-		<div class="row no-gutters">
-			<div class="col-md-6">
-				<div class="card-body">
-					<h4 class="card-title">@Model.FavouriteRecipe.Title</h4>
-					<p class="card-text">@Html.Raw(Model.FavouriteRecipe.Preamble)</p>
+	<form method="post" asp-page-handler="OnPostAsync" id="editForm">
+		<input type="hidden" asp-for="FavouriteRecipe.Id" />
+		<button type="submit" class="btn btn-primary mb-2">Spara ändringar</button>
+		<div class="card">
+			<div class="row no-gutters">
+				<div class="col-md-6">
+					<div class="card-body">
+						<h5>Redigera titel och kort beskrivning: </h5>
+
+						<div id="title" contenteditable="false" class="p-1">
+							<input type="text" name="title" value="@Model.FavouriteRecipe.Title" class="form-control" />
+						</div>
+						<div id="preamble" contenteditable="false" class="p-1">
+							<textarea name="preamble" rows="4" cols="50" class="form-control">@Html.Raw(Model.FavouriteRecipe.Preamble) </textarea>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<img src="@Model.FavouriteRecipe.ImgURL" alt="Recipe Image" width="200">
 				</div>
 			</div>
-			<div class="col-md-6">
-				<img src="@Model.FavouriteRecipe.ImgURL" class="card-img" alt="Recipe Image" width="100">
-			</div>
 		</div>
-	</div>
 
-	<br />
-	<div class="row">
-		<div class="col-6">
-			<h5>Redigera ingredienser: </h5>
-			<form method="post" asp-page-handler="UpdateIngredients" id="ingredients">
-				<input type="hidden" asp-for="FavouriteRecipe.Id" />
+		<br />
+
+
+		<div class="row">
+			<div class="col-6">
+				<h5>Redigera ingredienser: </h5>
+
 				<div id="ingredients" contenteditable="false">
 					<table class="table table-striped border" aria-label="" aria-hidden="true">
 						@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Ingredients))
@@ -33,34 +43,30 @@
 							for (var i = 0; i < ingredients.Length; i++)
 							{
 								<div class="p-1">
-									<input type="text" name="FavouriteRecipe.Ingredients[]" value="@ingredients[i]" class="form-control" />
+									<input type="text" name="ingredients[]" value="@ingredients[i]" class="form-control" />
 								</div>
 							}
 						}
 					</table>
 				</div>
-				<button type="submit" class="btn btn-primary">Spara ändringar</button>
-			</form>
+			</div>
+			<div class="col-6">
+				<h5>Redigera steg för steg:</h5>
+				<div id="description" contenteditable="false">
+					<table class="table table-striped border" aria-label="" aria-hidden="true">
+						@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Description))
+						{
+							var description = Model.FavouriteRecipe.Description.Split('|');
+							for (var i = 0; i < description.Length; i++)
+							{
+								<div class="p-1">
+									<input type="text" name="description[]" value="@description[i]" class="form-control" />
+								</div>
+							}
+						}
+					</table>
+				</div>
+			</div>
 		</div>
-		<div class="col-6">
-			<h5>Steg för steg:</h5>
-			<br />
-			@{
-				var stepCounter = 1;
-			}
-			@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Description))
-			{
-				foreach (var desc in Model.FavouriteRecipe.Description.Split('|'))
-				{
-					<div class="form-check" onclick="toggleCheckbox('@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")')">
-						<input class="form-check-input" type="checkbox" id="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")" name="step">
-						<label class="form-check-label" for="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")">
-							@desc.Trim()
-						</label>
-					</div>
-					stepCounter++;
-				}
-			}
-		</div>
-	</div>
+	</form>
 }

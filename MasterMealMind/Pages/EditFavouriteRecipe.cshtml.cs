@@ -4,6 +4,7 @@ using MasterMealMind.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OpenQA.Selenium;
+using MasterMealMind.Web.Helpers;
 
 namespace MasterMealMind.Web.Pages
 {
@@ -22,26 +23,24 @@ namespace MasterMealMind.Web.Pages
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(string[] ingredients, string[] description, string title, string preamble)
 		{
 			if (!ModelState.IsValid)
 			{
 				return Page();
 			}
 
-			var existingRecipe = await _favouriteRecipeService.GetOneAsync(FavouriteRecipe.Id);
+			var existingRecipe = await _favouriteRecipeService.GetOneAsync(FavouriteRecipe.Id) ?? throw new NotFoundException();
 
-			if (existingRecipe == null)
-			{
-				throw new NotFoundException();
-			}
-			var ingredients = Request.Form["FavouriteRecipe.Ingredients[]"];
 
-			existingRecipe.Ingredients = string.Join('|', ingredients);
+			existingRecipe.Title = title;
+			existingRecipe.Preamble = preamble;
+			existingRecipe.Ingredients = JoinString.JoinData(ingredients, "|");
+			existingRecipe.Description = JoinString.JoinData(description, "|");
 
 			await _favouriteRecipeService.UpdateAsync(existingRecipe);
 
-			return RedirectToPage("/EditFavouriteRecipe", new { recipeId = existingRecipe.Id });
+			return RedirectToPage("/RecipeDetailsPage", new { recipeId = existingRecipe.Id, source = "favourites" });
 		}
 	}
 }

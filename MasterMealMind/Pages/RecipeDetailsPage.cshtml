@@ -6,6 +6,9 @@
 }
 @if (Model.FavouriteRecipe != null)
 {
+	<a class="btn btn-warning mb-2" asp-page="/EditFavouriteRecipe" asp-route-recipeId="@Model.FavouriteRecipe.Id">
+		Redigera recept
+	</a>
 	<div class="card">
 		<div class="row no-gutters">
 			<div class="col-md-6">
@@ -59,9 +62,7 @@
 			}
 		</div>
 	</div>
-	<a class="btn btn-warning btn-sm" asp-page="/EditFavouriteRecipe" asp-route-recipeId="@Model.FavouriteRecipe.Id">
-		Redigera recept
-	</a>
+
 }
 else if (Model.Recipe != null)
 {
