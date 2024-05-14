@@ -14,7 +14,6 @@
 
 		@if (Model.FavouriteRecipes != null)
 		{
-			<p>@Model.FavouriteRecipes.Count()</p>
 			<div class="container">
 				<div class="row">
 					<div class="col">
@@ -24,16 +23,15 @@
 									<tr>
 										<th></th>
 										<th class="col-md-3 col-sm-3">Titel</th>
-										<th class="col-md-4 col-sm-4">Göra så här</th>
-										<th class="col-md-3 col-sm-3">Ingredienser</th>
-										<th class="col-md-2 col-sm-2">@string.Empty</th>
+										<th class="col-md-4 col-sm-4">Beskrivning</th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach (var recipe in Model.FavouriteRecipes)
 									{
 										<tr>
-											<td>
+											<td class="col-1">
 												<div class="form-group">
 													<form method="post" asp-page-handler="RemoveFromFavourites">
 														<input type="hidden" name="recipeId" value="@recipe.Id" />
@@ -47,32 +45,9 @@
 												</a>
 											</td>
 											<td class="col-md-3 col-sm-3">
-												@{
-													var stepCounter = 1;
-												}
-												@if (!string.IsNullOrEmpty(recipe.Description))
-												{
-													foreach (var desc in recipe.Description.Split('|'))
-													{
-														<div class="form-check" onclick="toggleCheckbox('@($"step{recipe.Id}_{stepCounter}")')">
-															<input class="form-check-input" type="checkbox" id="@($"step{recipe.Id}_{stepCounter}")" name="step">
-															<label class="form-check-label" for="@($"step{recipe.Id}_{stepCounter}")">
-																@desc.Trim()
-															</label>
-														</div>
-														stepCounter++;
-													}
-												}
-											</td>
-											<td class="col-md-3 col-sm-3">
-												@if (!string.IsNullOrEmpty(recipe.Ingredients))
-												{
-													foreach (var ingredient in recipe.Ingredients.Split('|'))
-													{
-														<div>@Html.Raw(IngredientFormatter.FormatingIngredient(ingredient))</div>
-													}
-												}
-											</td>
+												<div>
+													@recipe.Preamble
+												</div>
 											<td class="col-md-2 col-sm-2">
 												<img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title">
 											</td>

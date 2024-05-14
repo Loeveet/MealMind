@@ -26,6 +26,7 @@ namespace MasterMealMind.Web.Pages
             {
                 Recipes = await _recipeService.GetBasedOnSearchAsync(searchWord);
 				SearchString = _searchService.GetSearchString();
+                _searchService.ClearSearchString();
 			}
 			else
             {
