@@ -20,6 +20,11 @@ jobs:
 
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
+
+      - name: Show current directory
+        run: |
+          pwd
+          ls -al
         
       - name: Run custom method
-        run: dotnet run --project ./MealMind/MealMind/MasterMealMind/bin/Release/net8.0/MasterMealMind.Web.dll --no-build --method RunScraper
+        run: dotnet run --project ./MasterMealMind.Web --no-build --method RunScraper
