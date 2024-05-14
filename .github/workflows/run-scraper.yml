@@ -25,9 +25,6 @@ jobs:
         run: |
           pwd
           ls -al
-        
-      - name: Change directory to project
-        run: cd ./home/runner/work/MealMind/MealMind/MasterMealMind/bin/Release/net8.0/MasterMealMind.Web.dll
 
       - name: Run custom method
-        run: dotnet run --project /MasterMealMind.Web --no-build --method RunScraper
+        run: dotnet run --project ./home/runner/work/MealMind/MealMind/MasterMealMind/bin/Release/net8.0/MasterMealMind.Web.dll --no-build --method RunScraper
