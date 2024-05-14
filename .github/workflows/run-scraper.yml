@@ -7,7 +7,7 @@ jobs:
     
     defaults:
       run: 
-        working-directory: ./MasterMealMind
+        working-directory: ./MealMind
 
     steps:
       - name: Checkout code
