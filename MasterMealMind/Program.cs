@@ -1,54 +1,70 @@
 using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Services;
 using MasterMealMind.Infrastructure.Services;
+using MasterMealMind.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
+using OpenQA.Selenium.DevTools.V122.Page;
 
 namespace MasterMealMind.Web
 {
-	public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+	public class Program(IGetIcaRecipies getIcaRecipies)
+	{
+		private readonly IGetIcaRecipies _getIcaRecipies = getIcaRecipies;
 
-            //var connectionString = builder.Configuration.GetConnectionString("DEFAULTCONNECTION") ?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
-            //builder.Services.AddDbContext<MyDbContext>(options =>
-            //    options.UseSqlServer(connectionString));
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
-			var connectionString = Environment.GetEnvironmentVariable("DEFAULTCONNECTION") ?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
+
+			var connectionString = builder.Configuration.GetConnectionString("DEFAULTCONNECTION")
+				?? Environment.GetEnvironmentVariable("DEFAULTCONNECTION")
+				?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
+
 			builder.Services.AddDbContext<MyDbContext>(options =>
 				options.UseSqlServer(connectionString));
 
 
+
 			// Add services to the container.
 			builder.Services.AddRazorPages();
-            builder.Services.AddScoped<IGroceryService, GroceryService>();
-            builder.Services.AddScoped<ISearchService, SearchService>();
+			builder.Services.AddScoped<IGroceryService, GroceryService>();
+			builder.Services.AddScoped<ISearchService, SearchService>();
 			builder.Services.AddScoped<IRecipeService, RecipeService>();
 			builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
 			builder.Services.AddScoped<IFavouriteRecipeService, FavouriteRecipeService>();
 
 
 			var app = builder.Build();
+			if (args.Length > 0 && args[0] == "RunScraper")
+			{
+				var getIcaRecipies = app.Services.GetRequiredService<IGetIcaRecipies>();
+				RunScraper(getIcaRecipies);
+			}
+			else
+			{
+				// Configure the HTTP request pipeline.
+				if (!app.Environment.IsDevelopment())
+				{
+					app.UseExceptionHandler("/Error");
+					// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+					app.UseHsts();
+				}
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+				app.UseHttpsRedirection();
+				app.UseStaticFiles();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+				app.UseRouting();
 
-            app.UseRouting();
+				app.UseAuthorization();
 
-            app.UseAuthorization();
+				app.MapRazorPages();
 
-            app.MapRazorPages();
-
-            app.Run();
-        }
-    }
+				app.Run();
+			}
+		}
+		public static async void RunScraper(IGetIcaRecipies getIcaRecipies)
+		{
+			await getIcaRecipies.GetIcaAsync();
+		}
+	}
 }
