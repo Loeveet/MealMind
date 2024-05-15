@@ -8,12 +8,12 @@ namespace MasterMealMind.Web.Pages
 {
     public class IndexModel(ISearchService searchService, 
         IRecipeService recipeService, 
-        IGetIcaRecipies getIcaRecipies,
+        IGetIcaRecipes getIcaRecipies,
         IFavouriteRecipeService favouriteRecipeService) : PageModel
     {
 		private readonly ISearchService _searchService = searchService;
 		private readonly IRecipeService _recipeService = recipeService;
-		private readonly IGetIcaRecipies _getIcaRecipies = getIcaRecipies;
+		private readonly IGetIcaRecipes _getIcaRecipies = getIcaRecipies;
 		private readonly IFavouriteRecipeService _favouriteRecipeService = favouriteRecipeService;
 
 		public string? SearchString { get; set; }

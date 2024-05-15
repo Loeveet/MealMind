@@ -7,16 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MasterMealMind.Core.Interfaces.IRepositories;
 
 namespace MasterMealMind.Infrastructure.Services
 {
-	public class FavouriteRecipeService(MyDbContext context) : IFavouriteRecipeService
+	public class FavouriteRecipeService(IFavouriteRecipeRepository favouriteRecipeRepository, IRecipeService recipeService) : IFavouriteRecipeService
 	{
-		private readonly MyDbContext _context = context;
+		private readonly IFavouriteRecipeRepository _favouriteRecipeRepository = favouriteRecipeRepository;
+		private readonly IRecipeService _recipeService = recipeService;
 
 		public async Task AddAsync(int recipeId)
 		{
-			var recipe = await _context.Recipes.FindAsync(recipeId) ?? throw new NotFoundException();
+			var recipe = await _recipeService.GetOneAsync(recipeId);
 			var newFavouriteRecipe = new FavouriteRecipe
 			{
 				Title = recipe.Title,
@@ -26,27 +28,18 @@ namespace MasterMealMind.Infrastructure.Services
 				ImgURL = recipe.ImgURL,
 				RecipeId = recipeId
 			};
-			await _context.FavouriteRecipes.AddAsync(newFavouriteRecipe);
-			await _context.SaveChangesAsync();
+			await _favouriteRecipeRepository.AddAsync(newFavouriteRecipe);
 		}
 
-		public async Task<bool> ExistsAsync(int recipeId) => await _context.FavouriteRecipes.AnyAsync(x => x.RecipeId == recipeId);
+		public async Task<bool> ExistsAsync(int recipeId) => await _favouriteRecipeRepository.ExistsAsync(recipeId);
 
-		public async Task<IEnumerable<FavouriteRecipe>> GetAsync() => await _context.FavouriteRecipes.ToListAsync() ?? [];
+		public async Task<IEnumerable<FavouriteRecipe>> GetAsync() => await _favouriteRecipeRepository.GetAsync();
 
-        public async Task<FavouriteRecipe> GetOneAsync(int recipeId) => await _context.FavouriteRecipes.FindAsync(recipeId) ?? throw new NotFoundException();
+		public async Task<FavouriteRecipe> GetOneAsync(int recipeId) => await _favouriteRecipeRepository.GetOneAsync(recipeId);
 
-        public async Task RemoveAsync(int recipeId)
-		{
-			var recipe = await _context.FavouriteRecipes.FindAsync(recipeId) ?? throw new NotFoundException();
-			_context.FavouriteRecipes.Remove(recipe);
-			await _context.SaveChangesAsync();
-		}
+        public async Task RemoveAsync(int recipeId) => await _favouriteRecipeRepository.RemoveAsync(await GetOneAsync(recipeId));
 
-		public async Task UpdateAsync(FavouriteRecipe recipe)
-		{
-			_context.FavouriteRecipes.Update(recipe);
-			await _context.SaveChangesAsync();
-		}
+		public async Task UpdateAsync(FavouriteRecipe recipe) => await _favouriteRecipeRepository.UpdateAsync(recipe);
+		
 	}
 }

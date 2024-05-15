@@ -4,7 +4,7 @@ using MasterMealMind.Scraper.Scrapers;
 
 namespace MasterMealMind.Infrastructure.Services
 {
-	public class GetIcaRecipies(IRecipeService recipeService) : IGetIcaRecipies
+	public class GetIcaRecipes(IRecipeService recipeService) : IGetIcaRecipes
 	{
 		private readonly IRecipeService _recipeService = recipeService;
 

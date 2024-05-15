@@ -40,7 +40,7 @@ namespace MasterMealMind.Web.Pages
 
         public async Task<IActionResult> OnPostDeleteGrocery([FromForm] int deleteId)
         {
-            if (await _groceryService.GetOneAsync(deleteId) is null)
+			if (!await _groceryService.GroceryExistsAsync(deleteId))
                 return RedirectToPage();
 
             await _groceryService.DeleteAsync(deleteId);
@@ -48,7 +48,7 @@ namespace MasterMealMind.Web.Pages
         }
         public async Task<IActionResult> OnPostEditGrocery([FromForm] int editId)
         {
-            var editedGrocery = await _groceryService.GetOneAsync(editId);
+            var editedGrocery = await _groceryService.GetOneByIdAsync(editId);
             if (editedGrocery is null)
                 return RedirectToPage();
 

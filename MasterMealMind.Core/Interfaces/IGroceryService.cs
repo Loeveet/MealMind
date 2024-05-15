@@ -6,12 +6,10 @@ namespace MasterMealMind.Core.Services
     {
 		Task<IEnumerable<Grocery>> GetAllAsync();
 
-        Task<Grocery> GetOneAsync(int id);
+        Task<Grocery> GetOneByIdAsync(int id);
+		Task<Grocery> GetOneByNameAsync(string name);
 
-        Task AddOrUpdateAsync(Grocery modifiedGrocery);
-
-
-        Task UpdateAsync(Grocery grocery);
+		Task AddOrUpdateAsync(Grocery modifiedGrocery);
 
         Task DeleteAsync(int id);
 

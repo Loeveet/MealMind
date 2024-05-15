@@ -1,5 +1,7 @@
 using MasterMealMind.Core.Interfaces;
+using MasterMealMind.Core.Interfaces.IRepositories;
 using MasterMealMind.Core.Services;
+using MasterMealMind.Infrastructure.Repositories;
 using MasterMealMind.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +28,11 @@ namespace MasterMealMind.Web
 			builder.Services.AddScoped<IGroceryService, GroceryService>();
 			builder.Services.AddScoped<ISearchService, SearchService>();
 			builder.Services.AddScoped<IRecipeService, RecipeService>();
-			builder.Services.AddScoped<IGetIcaRecipies, GetIcaRecipies>();
+			builder.Services.AddScoped<IGetIcaRecipes, GetIcaRecipes>();
 			builder.Services.AddScoped<IFavouriteRecipeService, FavouriteRecipeService>();
+			builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+			builder.Services.AddScoped<IGroceryRepository, GroceryRepository>();
+			builder.Services.AddScoped<IFavouriteRecipeRepository, FavouriteRecipeRepository>();
 
 
 			var app = builder.Build();

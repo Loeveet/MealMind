@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MasterMealMind.Core.Interfaces
 {
-    public interface IGetIcaRecipies
+    public interface IGetIcaRecipes
     {
         public Task GetIcaAsync();
     }
