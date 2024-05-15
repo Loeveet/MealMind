@@ -28,8 +28,8 @@ jobs:
           pwd
           ls -al
 
-          - name: Show environment variables
-          run: printenv
+      - name: Show environment variables
+        run: printenv
 
       - name: Show DEFAULTCONNECTION
         run: echo $DEFAULTCONNECTION
