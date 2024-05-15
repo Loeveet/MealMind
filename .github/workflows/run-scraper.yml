@@ -4,7 +4,6 @@ on:
 jobs:
   run-custom-method:
     runs-on: ubuntu-latest
-    
 
     steps:
       - name: Checkout code
@@ -13,7 +12,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Restore dependencies
         run: dotnet restore
@@ -27,5 +26,6 @@ jobs:
           ls -al
 
       - name: Run custom method
-        run: dotnet run --project ./MasterMealMind/MasterMealMind.Web.csproj --method RunScraper --connection-string ${{ secrets.DEFAULTCONNECTION }}
-
+        run: dotnet run --project ./MasterMealMind/MasterMealMind.Web.csproj --method RunScraper
+        env:
+          DEFAULTCONNECTION: ${{ secrets.DEFAULTCONNECTION }}
