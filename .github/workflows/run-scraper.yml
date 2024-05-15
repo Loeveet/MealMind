@@ -1,8 +1,7 @@
+# doesnt work atm. can't connect to local db
+
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   run-custom-method:

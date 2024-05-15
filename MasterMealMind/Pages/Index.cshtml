@@ -44,7 +44,11 @@
 			if (Model.Recipes.Count() == 0)
 			{
 				<h2 class="my-2">
-					Din sökning gav inga resultat
+					@(
+						string.IsNullOrEmpty(Model.SearchString)
+						? "Databasen är tom"
+						: "Din sökning gav inga resultat"
+					)
 				</h2>
 			}
 			else
