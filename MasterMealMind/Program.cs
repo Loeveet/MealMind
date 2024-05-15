@@ -11,13 +11,17 @@ namespace MasterMealMind.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = builder.Configuration.GetConnectionString("DEFAULTCONNECTION") ?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
-            builder.Services.AddDbContext<MyDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            //var connectionString = builder.Configuration.GetConnectionString("DEFAULTCONNECTION") ?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
+            //builder.Services.AddDbContext<MyDbContext>(options =>
+            //    options.UseSqlServer(connectionString));
+
+			var connectionString = Environment.GetEnvironmentVariable("DEFAULTCONNECTION") ?? throw new InvalidOperationException("Connection string 'DEFAULTCONNECTION' not found.");
+			builder.Services.AddDbContext<MyDbContext>(options =>
+				options.UseSqlServer(connectionString));
 
 
-            // Add services to the container.
-            builder.Services.AddRazorPages();
+			// Add services to the container.
+			builder.Services.AddRazorPages();
             builder.Services.AddScoped<IGroceryService, GroceryService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
 			builder.Services.AddScoped<IRecipeService, RecipeService>();
