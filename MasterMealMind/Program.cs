@@ -7,11 +7,10 @@ using OpenQA.Selenium.DevTools.V122.Page;
 
 namespace MasterMealMind.Web
 {
-	public class Program(IGetIcaRecipies getIcaRecipies)
+	public class Program
 	{
-		private readonly IGetIcaRecipies _getIcaRecipies = getIcaRecipies;
 
-		public static void Main(string[] args)
+		public static async Task Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +37,7 @@ namespace MasterMealMind.Web
 			if (args.Length > 0 && args[0] == "RunScraper")
 			{
 				var getIcaRecipies = app.Services.GetRequiredService<IGetIcaRecipies>();
-				RunScraper(getIcaRecipies);
+				await RunScraper(getIcaRecipies);
 			}
 			else
 			{
@@ -62,7 +61,7 @@ namespace MasterMealMind.Web
 				app.Run();
 			}
 		}
-		public static async void RunScraper(IGetIcaRecipies getIcaRecipies)
+		public static async Task RunScraper(IGetIcaRecipies getIcaRecipies)
 		{
 			await getIcaRecipies.GetIcaAsync();
 		}
