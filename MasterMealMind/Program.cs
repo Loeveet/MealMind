@@ -37,7 +37,7 @@ namespace MasterMealMind.Web
 			if (args.Length > 0 && args[0] == "RunScraper")
 			{
 				using var scope = app.Services.CreateScope();
-				var getIcaRecipies = app.Services.GetRequiredService<IGetIcaRecipies>();
+				var getIcaRecipies = scope.ServiceProvider.GetRequiredService<IGetIcaRecipies>();
 				await RunScraper(getIcaRecipies);
 			}
 			else
