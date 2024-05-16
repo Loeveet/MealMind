@@ -16,9 +16,10 @@ namespace MasterMealMind.Scraper.Scrapers
             var recipes = new List<Recipe>();
             var options = new ChromeOptions();
             options.AddArgument("--headless");
+			options.AddArgument("--incognito");
 
-            // Instantiate Chrome WebDriver
-            using (var driver = new ChromeDriver(options))
+			// Instantiate Chrome WebDriver
+			using (var driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(url);
                 var actions = new Actions(driver);
@@ -65,7 +66,7 @@ namespace MasterMealMind.Scraper.Scrapers
                     recipeLinks.Add(element.GetAttribute("href"));
                 }
 
-                // Scrape all recipes i different threads at the same time
+                // Scrape all recipes i different threads at the same time and waits until all is done
                 await Task.WhenAll(recipeLinks.Select(link => ScraperHelpers.ProcessRecipeAsync(driver, link, recipes)));
 
                 return recipes;

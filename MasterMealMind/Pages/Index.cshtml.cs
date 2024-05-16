@@ -1,6 +1,5 @@
 ﻿using MasterMealMind.Core.Interfaces;
 using MasterMealMind.Core.Models;
-using MasterMealMind.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -22,7 +21,8 @@ namespace MasterMealMind.Web.Pages
         public async Task<IActionResult> OnGetAsync(string searchWord)
         {
             SearchString = _searchService.GetSearchString();
-            if(SearchString != string.Empty || searchWord != null) 
+
+            if (SearchString != string.Empty || searchWord != null) 
             {
                 Recipes = await _recipeService.GetBasedOnSearchAsync(searchWord);
 				SearchString = _searchService.GetSearchString();
@@ -43,16 +43,13 @@ namespace MasterMealMind.Web.Pages
 		{
             await _getIcaRecipies.GetIcaAsync();
 			return RedirectToPage();
-			
 		}
 		public async Task<IActionResult> OnPostAddToFavourites(int recipeId)
 		{
-            if (await _favouriteRecipeService.ExistsAsync(recipeId))
-				return RedirectToPage();
+			if (!await _favouriteRecipeService.ExistsAsync(recipeId))
+				await _favouriteRecipeService.AddAsync(recipeId);
 
-			await _favouriteRecipeService.AddAsync(recipeId);
 			return RedirectToPage();
-
 		}
 	}
 }

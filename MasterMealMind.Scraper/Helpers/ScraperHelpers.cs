@@ -67,54 +67,43 @@ namespace MasterMealMind.Scraper.Helpers
 
 		public static string FilterIngredients(HtmlNodeCollection ingredientGroups)
 		{
+			if (ingredientGroups == null)
+				return string.Empty;
 
 			var combinedList = new List<string>();
 
-			if (ingredientGroups != null)
+			foreach (var group in ingredientGroups)
 			{
-				foreach (var group in ingredientGroups)
+				var headerNode = group.SelectSingleNode(".//h3[contains(@class, 'ingredients-list-group__heading')]");
+				var ingredientNodes = group.SelectNodes(".//div[contains(@class, 'ingredients-list-group__card')]");
+
+				if (headerNode != null)
 				{
-					var headerNode = group.SelectSingleNode(".//h3[contains(@class, 'ingredients-list-group__heading')]");
-					var ingredientNodes = group.SelectNodes(".//div[contains(@class, 'ingredients-list-group__card')]");
-
-					if (headerNode != null)
-					{
-						var headerText = DecodeHtml(headerNode.InnerText.Trim());
-						combinedList.Add("*" + headerText);
-					}
-
-					if (ingredientNodes != null)
-					{
-						var ingredientsText = ingredientNodes
-						.Select(ing =>
-						{
-							var quantityElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__qty')]");
-							var ingredientNameElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__ingr')]");
-
-							if (ingredientNameElement != null)
-							{
-								string quantity = "";
-								if (quantityElement != null)
-								{
-									quantity = DecodeHtml(quantityElement.InnerText.Trim());
-								}
-
-								var ingredientName = DecodeHtml(ingredientNameElement.InnerText.Trim());
-								var ingredientText = string.IsNullOrWhiteSpace(quantity) ? ingredientName : $"{quantity} {ingredientName}";
-								return UseRegex(ingredientText);
-							}
-							return null;
-						})
-						.ToList();
-
-						combinedList.AddRange(ingredientsText);
-					}
+					var headerText = DecodeHtml(headerNode.InnerText.Trim());
+					combinedList.Add("*" + headerText);
 				}
+
+				if (ingredientNodes == null)
+					continue;
+
+				var ingredientsText = ingredientNodes
+				.Select(ing =>
+				{
+					var quantityElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__qty')]");
+					var ingredientNameElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__ingr')]");
+
+					if (ingredientNameElement != null)
+						return null;
+
+					var quantity = quantityElement != null ? DecodeHtml(quantityElement.InnerText.Trim()) : "";
+					var ingredientName = DecodeHtml(ingredientNameElement.InnerText.Trim());
+					var ingredientText = string.IsNullOrWhiteSpace(quantity) ? ingredientName : $"{quantity} {ingredientName}";
+					return UseRegex(ingredientText);
+				}).ToList();
+
+				combinedList.AddRange(ingredientsText);
 			}
-
-			string combinedIngredients = string.Join("| ", combinedList);
-			return combinedIngredients;
-
+			return string.Join("| ", combinedList);
 		}
 		public static string FilterDescription(HtmlNodeCollection descriptionElement)
 		{
@@ -192,22 +181,22 @@ namespace MasterMealMind.Scraper.Helpers
 		{
 			var ingredientElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'ingredients')]//div[contains(@class, 'ingredients-list-group')]");
 
-			if (ingredientElements != null)
-			{
-				string ingredients = FilterIngredients(ingredientElements);
-				recipe.Ingredients = ingredients;
-			}
+			if (ingredientElements == null)
+				return;
+
+			var ingredients = FilterIngredients(ingredientElements);
+			recipe.Ingredients = ingredients;
 		}
 
 		private static void SetRecipeDescription(HtmlDocument htmlDocument, Recipe recipe)
 		{
 			var descElements = htmlDocument.DocumentNode.SelectNodes("//div[contains(@id, 'steps')]//div[contains(@class, 'cooking-steps-group')]//div");
 
-			if (descElements != null)
-			{
-				var descriptions = FilterDescription(descElements);
-				recipe.Description = descriptions;
-			}
+			if (descElements == null)
+				return;
+
+			var descriptions = FilterDescription(descElements);
+			recipe.Description = descriptions;
 		}
 	}
 }
