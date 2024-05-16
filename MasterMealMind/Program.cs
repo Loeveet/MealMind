@@ -3,6 +3,7 @@ using MasterMealMind.Core.Interfaces.IRepositories;
 using MasterMealMind.Core.Services;
 using MasterMealMind.Infrastructure.Repositories;
 using MasterMealMind.Infrastructure.Services;
+using MasterMealMind.Scraper.Scrapers;
 using Microsoft.EntityFrameworkCore;
 
 namespace MasterMealMind.Web
@@ -33,6 +34,7 @@ namespace MasterMealMind.Web
 			builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 			builder.Services.AddScoped<IGroceryRepository, GroceryRepository>();
 			builder.Services.AddScoped<IFavouriteRecipeRepository, FavouriteRecipeRepository>();
+			builder.Services.AddScoped<IICAScraper, ICAscraper>();
 
 
 			var app = builder.Build();

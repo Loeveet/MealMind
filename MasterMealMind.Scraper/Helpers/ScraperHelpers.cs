@@ -92,7 +92,7 @@ namespace MasterMealMind.Scraper.Helpers
 					var quantityElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__qty')]");
 					var ingredientNameElement = ing.SelectSingleNode(".//span[contains(@class, 'ingredients-list-group__card__ingr')]");
 
-					if (ingredientNameElement != null)
+					if (ingredientNameElement == null)
 						return null;
 
 					var quantity = quantityElement != null ? DecodeHtml(quantityElement.InnerText.Trim()) : "";

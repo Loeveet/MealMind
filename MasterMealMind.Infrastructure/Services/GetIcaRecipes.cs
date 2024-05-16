@@ -5,9 +5,10 @@ using static System.Net.WebRequestMethods;
 
 namespace MasterMealMind.Infrastructure.Services
 {
-	public class GetIcaRecipes(IRecipeService recipeService) : IGetIcaRecipes
+	public class GetIcaRecipes(IRecipeService recipeService, IICAScraper icaScraper) : IGetIcaRecipes
 	{
 		private readonly IRecipeService _recipeService = recipeService;
+		private readonly IICAScraper _icaScraper = icaScraper;
 
 		public async Task GetIcaAsync()
 		{
@@ -15,7 +16,7 @@ namespace MasterMealMind.Infrastructure.Services
 			{
 				"https://www.ica.se/recept/",
 				"https://www.ica.se/recept/billig",
-				"https://www.ica.se/recept/frukost/",				
+				"https://www.ica.se/recept/frukost/",
 				"https://www.ica.se/recept/vardag/frukost/",
 				"https://www.ica.se/recept/vardag/middag/",
 				"https://www.ica.se/recept/mellanmal/",
@@ -24,18 +25,25 @@ namespace MasterMealMind.Infrastructure.Services
 
 			};
 
-			var allRecipes = new List<Recipe>(); 
+			var allRecipes = new List<Recipe>();
 			var uniqueRecipeTitles = new HashSet<string>();
 
 			foreach (var endpoint in icaEndpoints)
 			{
-				var icaScraper = new ICAscraper();
-				var recipes = await icaScraper.GetAsync(endpoint);
-				allRecipes.AddRange(recipes); 
-
-				foreach (var recipe in recipes)
+				try
 				{
-					uniqueRecipeTitles.Add(recipe.Title);
+					var recipes = await _icaScraper.GetAsync(endpoint);
+					allRecipes.AddRange(recipes);
+
+					foreach (var recipe in recipes)
+					{
+						uniqueRecipeTitles.Add(recipe.Title);
+					}
+
+				}
+				catch
+				{
+					continue;
 				}
 			}
 
