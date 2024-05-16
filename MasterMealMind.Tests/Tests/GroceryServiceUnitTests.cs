@@ -55,31 +55,31 @@ namespace MasterMealMind.Tests.Tests
 
 		}
 
-		//[Fact]
-		//public async void AddOrUpdateAsync_ShouldUpdate_IfExists()
-		//{
-		//	//Arrange
-		//	var groceryRepositoryMock = new Mock<IGroceryRepository>();
-		//	groceryRepositoryMock.Setup(repo => repo.GroceryExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
-			
-		//	var existingGrocery = new Grocery { Id = 1, Name = "Tomato", Quantity = 2, Description = "Red" };
-		//	var updatedExistingGrocery = new Grocery { Id = 1, Name = "Tomato", Quantity = 3, Description = "Red" };
+		[Fact]
+		public async void AddOrUpdateAsync_ShouldUpdate_IfExists()
+		{
+			//Arrange
+			var groceryRepositoryMock = new Mock<IGroceryRepository>();
+			var existingGrocery = new Grocery { Id = 1, Name = "Tomato", Quantity = 2, Description = "Red" };
+			var updatedExistingGrocery = new Grocery { Id = 1, Name = "Tomato", Quantity = 3, Description = "Red" };
 
-		//	var groceryServiceMock = new Mock<IGroceryService>();
-		//	groceryRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Grocery>())).Verifiable();
-		//	groceryRepositoryMock.Setup(repo => repo.GetOneByNameAsync(It.IsAny<string>())).Verifiable();
+			groceryRepositoryMock.Setup(repo => repo.GroceryExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
+			groceryRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Grocery>())).Verifiable();
+			groceryRepositoryMock.Setup(repo => repo.GetOneByNameAsync(It.IsAny<string>())).ReturnsAsync(existingGrocery);
 
-		//	groceryServiceMock.Setup(service => service.GetOneByNameAsync(existingGrocery.Name)).ReturnsAsync(existingGrocery);
-		//	groceryServiceMock.Setup(service => service.GetGroceryToUpdate(It.IsAny<Grocery>(), existingGrocery)).Returns(updatedExistingGrocery);
+			var sut = new GroceryService(groceryRepositoryMock.Object);
 
-		//	var sut = new GroceryService(groceryRepositoryMock.Object);
+			//Act
+			await sut.AddOrUpdateAsync(updatedExistingGrocery);
 
-		//	//Act
-		//	await sut.AddOrUpdateAsync(existingGrocery);
-
-		//	//Assert
-		//	groceryRepositoryMock.Verify(repo => repo.UpdateAsync(updatedExistingGrocery), Times.Once);
-		//	groceryRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Grocery>()), Times.Never);
-		//}
+			//Assert
+			groceryRepositoryMock.Verify(repo => repo.UpdateAsync(It.Is<Grocery>(g =>
+				 g.Id == updatedExistingGrocery.Id &&
+				 g.Name == updatedExistingGrocery.Name &&
+				 g.Quantity == updatedExistingGrocery.Quantity &&
+				 g.Description == updatedExistingGrocery.Description
+			 )), Times.Once); 
+			groceryRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Grocery>()), Times.Never);
+		}
 	}
 }

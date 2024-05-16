@@ -85,7 +85,7 @@
 												</td>
 												<td class="col-md-3 col-sm-3">
 													<div>
-														@recipe.Preamble
+														@Html.Raw(recipe.Preamble)
 													</div>
 												<td class="col-md-2 col-sm-2">
 													<img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title">
