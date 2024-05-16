@@ -1,11 +1,12 @@
-﻿using MasterMealMind.Infrastructure.Services;
+﻿using MasterMealMind.Core.Interfaces;
+using MasterMealMind.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterMealMind.Tests
+namespace MasterMealMind.Tests.Tests
 {
     public class CheckInputServiceTests
     {
