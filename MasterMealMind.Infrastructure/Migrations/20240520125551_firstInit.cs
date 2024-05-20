@@ -20,7 +20,8 @@ namespace MasterMealMind.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Preamble = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImgURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RecipeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

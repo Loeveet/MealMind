@@ -14,10 +14,10 @@
 					<div class="card-body">
 						<h5>Redigera titel och kort beskrivning: </h5>
 
-						<div id="title" contenteditable="false" class="p-1">
+						<div id="title" class="p-1">
 							<input type="text" name="title" value="@Model.FavouriteRecipe.Title" class="form-control" />
 						</div>
-						<div id="preamble" contenteditable="false" class="p-1">
+						<div id="preamble" class="p-1">
 							<textarea name="preamble" rows="4" cols="50" class="form-control">@Html.Raw(Model.FavouriteRecipe.Preamble) </textarea>
 						</div>
 					</div>
@@ -35,7 +35,7 @@
 			<div class="col-6">
 				<h5>Redigera ingredienser: </h5>
 
-				<div id="ingredients" contenteditable="false">
+				<div id="ingredients">
 					<table class="table table-striped border" aria-label="" aria-hidden="true">
 						@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Ingredients))
 						{
@@ -52,7 +52,7 @@
 			</div>
 			<div class="col-6">
 				<h5>Redigera steg för steg:</h5>
-				<div id="description" contenteditable="false">
+				<div id="description">
 					<table class="table table-striped border" aria-label="" aria-hidden="true">
 						@if (!string.IsNullOrEmpty(Model.FavouriteRecipe.Description))
 						{

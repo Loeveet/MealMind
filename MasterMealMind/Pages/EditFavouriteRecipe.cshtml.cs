@@ -27,7 +27,7 @@ namespace MasterMealMind.Web.Pages
 		{
 			if (!ModelState.IsValid)
 			{
-				return Page();
+				return RedirectToPage("/EditFavouriteRecipe", new { recipeId = FavouriteRecipe.Id });
 			}
 
 			await _favouriteRecipeService.UpdateAsync(FavouriteRecipe.Id, ingredients, description, title, preamble);
