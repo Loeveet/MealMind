@@ -39,7 +39,20 @@ namespace MasterMealMind.Infrastructure.Services
 
         public async Task RemoveAsync(int recipeId) => await _favouriteRecipeRepository.RemoveAsync(await GetOneAsync(recipeId));
 
-		public async Task UpdateAsync(FavouriteRecipe recipe) => await _favouriteRecipeRepository.UpdateAsync(recipe);
-		
+		public async Task UpdateAsync(int id, string[] ingredients, string[] description, string title, string preamble)
+		{
+			var existingRecipe = await GetOneAsync(id) ?? throw new NotFoundException();
+
+			existingRecipe.Title = title;
+			existingRecipe.Preamble = preamble;
+			existingRecipe.Ingredients = JoinData("|", ingredients);
+			existingRecipe.Description = JoinData("|", description);
+
+			await _favouriteRecipeRepository.UpdateAsync(existingRecipe);
+		}
+		private static string JoinData(string separator, string[] data)
+		{
+			return string.Join(separator, data);
+		}
 	}
 }

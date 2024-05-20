@@ -1,6 +1,6 @@
 ﻿namespace MasterMealMind.Web.Helpers
 {
-    public static class IngredientFormatter
+    public static class Formatter
     {
         public static string FormatingIngredient(string ingredient)
         {
@@ -21,5 +21,21 @@
                 return trimmedIngredient;
             }
         }
-    }
+		public static string FormatDescription(string desc)
+		{
+			var trimmedDesc = desc.Trim();
+			var colonIndex = trimmedDesc.IndexOf(':');
+
+			if (colonIndex != -1)
+			{
+				var beforeColon = trimmedDesc[..colonIndex].Trim();
+				var afterColon = trimmedDesc[(colonIndex + 1)..].Trim();
+				return $"<strong>{beforeColon}</strong>: {afterColon}";
+			}
+			else
+			{
+				return trimmedDesc;
+			}
+		}
+	}
 }

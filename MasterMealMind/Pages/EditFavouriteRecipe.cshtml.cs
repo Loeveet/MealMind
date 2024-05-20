@@ -30,17 +30,9 @@ namespace MasterMealMind.Web.Pages
 				return Page();
 			}
 
-			var existingRecipe = await _favouriteRecipeService.GetOneAsync(FavouriteRecipe.Id) ?? throw new NotFoundException();
+			await _favouriteRecipeService.UpdateAsync(FavouriteRecipe.Id, ingredients, description, title, preamble);
 
-
-			existingRecipe.Title = title;
-			existingRecipe.Preamble = preamble;
-			existingRecipe.Ingredients = JoinString.JoinData(ingredients, "|");
-			existingRecipe.Description = JoinString.JoinData(description, "|");
-
-			await _favouriteRecipeService.UpdateAsync(existingRecipe);
-
-			return RedirectToPage("/RecipeDetailsPage", new { recipeId = existingRecipe.Id, source = "favourites" });
+			return RedirectToPage("/RecipeDetailsPage", new { recipeId = FavouriteRecipe.Id, source = "favourites" });
 		}
 	}
 }

@@ -33,7 +33,7 @@
 						{
 							foreach (var ingredient in Model.FavouriteRecipe.Ingredients.Split('|'))
 							{
-								<div class="ingredient">@Html.Raw(IngredientFormatter.FormatingIngredient(ingredient))</div>
+								<div class="ingredient">@Html.Raw(Formatter.FormatingIngredient(ingredient))</div>
 							}
 						}
 					</td>
@@ -53,7 +53,7 @@
 					<div class="form-check p-1" onclick="toggleCheckbox('@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")')">
 						<input class="form-check-input" type="checkbox" id="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")" name="step">
 						<label class="form-check-label" for="@($"step{Model.FavouriteRecipe.Id}_{stepCounter}")">
-							@desc.Trim()
+							@Html.Raw(Formatter.FormatDescription(desc))
 						</label>
 					</div>
 					stepCounter++;
@@ -90,7 +90,7 @@ else if (Model.Recipe != null)
 						{
 							foreach (var ingredient in Model.Recipe.Ingredients.Split('|'))
 							{
-								<div>@Html.Raw(IngredientFormatter.FormatingIngredient(ingredient))</div>
+								<div>@Html.Raw(Formatter.FormatingIngredient(ingredient))</div>
 							}
 						}
 					</td>
@@ -109,7 +109,7 @@ else if (Model.Recipe != null)
 					<div class="form-check p-1" onclick="toggleCheckbox('@($"step{Model.Recipe.Id}_{stepCounter}")')">
 						<input class="form-check-input" type="checkbox" id="@($"step{Model.Recipe.Id}_{stepCounter}")" name="step">
 						<label class="form-check-label" for="@($"step{Model.Recipe.Id}_{stepCounter}")">
-							@desc.Trim()
+							@Html.Raw(Formatter.FormatDescription(desc))
 						</label>
 					</div>
 					stepCounter++;

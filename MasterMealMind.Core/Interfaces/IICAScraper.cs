@@ -9,6 +9,6 @@ namespace MasterMealMind.Core.Interfaces
 {
 	public interface IICAScraper
 	{
-		Task<List<Recipe>> GetAsync(string url);
+		Task<List<Recipe>> StartScraperAsync(string url);
 	}
 }

@@ -8,7 +8,7 @@ namespace MasterMealMind.Scraper
 		{
 
 			var s = new ICAscraper();
-			await s.GetAsync("https://www.ica.se/recept/");
+			await s.StartScraperAsync("https://www.ica.se/recept/");
 		}
 	}
 }

@@ -14,10 +14,6 @@ namespace MasterMealMind.Core.Interfaces
 		Task RemoveAsync(int recipeId);
 		Task<bool> ExistsAsync(int recipeId);
 		Task<FavouriteRecipe> GetOneAsync(int recipeId);
-		Task UpdateAsync(FavouriteRecipe recipe);
-		//Task<List<string?>> GetTitlesAsync();
-		//Task AddAsync(List<Recipe> recipes);
-		//Task<IEnumerable<Recipe>> GetTenAsync();
-		//Task<IEnumerable<Recipe>> GetBasedOnSearchAsync();
+		Task UpdateAsync(int id, string[] ingredients, string[] description, string title, string preamble);
 	}
 }

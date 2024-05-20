@@ -1,5 +1,4 @@
-﻿using HtmlAgilityPack;
-using MasterMealMind.Core.Models;
+﻿using MasterMealMind.Core.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
@@ -12,7 +11,7 @@ namespace MasterMealMind.Scraper.Scrapers
 {
 	public class ICAscraper : IICAScraper
 	{
-		public async Task<List<Recipe>> GetAsync(string url)
+		public async Task<List<Recipe>> StartScraperAsync(string url)
 		{
 			var recipes = new List<Recipe>();
 			var options = new ChromeOptions();
@@ -41,7 +40,7 @@ namespace MasterMealMind.Scraper.Scrapers
 				}
 
 				var clickCount = 0;
-				var wantedClicks = 5;
+				var wantedClicks = 2;
 
 				//Find and click "show more" a number of times to load recipes
 				while (clickCount < wantedClicks)
@@ -52,7 +51,7 @@ namespace MasterMealMind.Scraper.Scrapers
 						((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(false);", showMoreButton);
 						actions.MoveToElement(showMoreButton).Click().Perform();
 						clickCount++;
-						Thread.Sleep(2000);
+						Thread.Sleep(1000);
 					}
 					catch (NoSuchElementException)
 					{
@@ -73,5 +72,5 @@ namespace MasterMealMind.Scraper.Scrapers
 
 			return recipes;
 		}
-}
+	}
 }

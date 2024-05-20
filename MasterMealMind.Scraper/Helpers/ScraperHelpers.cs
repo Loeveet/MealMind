@@ -130,6 +130,7 @@ namespace MasterMealMind.Scraper.Helpers
 				}
 			}
 
+
 			return string.Join(" | ", steps);
 		}
 		public static async Task ProcessRecipeAsync(IWebDriver driver, string recipeLink, List<Recipe> recipes)
@@ -157,7 +158,7 @@ namespace MasterMealMind.Scraper.Helpers
 			recipes.Add(recipe);
 
 			//Add delay for handle websitedelay and avoid overload on website
-			await Task.Delay(2000);
+			await Task.Delay(1000);
 		}
 		private static void SetRecipeTitle(HtmlDocument htmlDocument, Recipe recipe)
 		{
