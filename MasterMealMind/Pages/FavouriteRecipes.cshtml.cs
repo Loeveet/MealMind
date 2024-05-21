@@ -6,14 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace MasterMealMind.Web.Pages
 {
 
-	public class FavouriteRecipesModel(ISearchService searchService,
-		IRecipeService recipeService,
-		IGetIcaRecipes getIcaRecipies,
-		IFavouriteRecipeService favouriteRecipeService) : PageModel
+	public class FavouriteRecipesModel(IFavouriteRecipeService favouriteRecipeService) : PageModel
 	{
-		private readonly ISearchService _searchService = searchService;
-		private readonly IRecipeService _recipeService = recipeService;
-		private readonly IGetIcaRecipes _getIcaRecipies = getIcaRecipies;
 		private readonly IFavouriteRecipeService _favouriteRecipeService = favouriteRecipeService;
 
 		public IEnumerable<FavouriteRecipe> FavouriteRecipes { get; set; } = [];

@@ -16,7 +16,6 @@ namespace MasterMealMind.Web.Pages
 		private readonly IRecipeService _recipeService = recipeService;
 		private readonly IGetIcaRecipes _getIcaRecipes = getIcaRecipes;
 		private readonly IFavouriteRecipeService _favouriteRecipeService = favouriteRecipeService;
-		private readonly Stopwatch _stopwatch = new Stopwatch();
 
 		public string? SearchString { get; set; }
         public IEnumerable<Recipe> Recipes { get; set; } = [];
