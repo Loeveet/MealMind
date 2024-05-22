@@ -4,11 +4,9 @@ namespace MasterMealMind.Scraper
 {
 	public class Program
 	{
-		public static async Task Main(string[] args)
+		public static void Main(string[] args)
 		{
 
-			var s = new ICAscraper();
-			await s.StartScraperAsync("https://www.ica.se/recept/");
 		}
 	}
 }
