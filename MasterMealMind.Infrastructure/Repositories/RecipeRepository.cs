@@ -27,11 +27,13 @@ namespace MasterMealMind.Infrastructure.Repositories
 		public async Task<IEnumerable<Recipe>> GetBasedOnSearchAsync(string[] searchWords)
 		{
 			var recipes = await _context.Recipes
-				.Where(recipe => searchWords.All(word => recipe.Ingredients.ToLower().Contains(word.ToLower()) 
-					|| recipe.Title.ToLower().Contains(word.ToLower())))
+				.Where(recipe => searchWords.All(word =>
+					(!string.IsNullOrEmpty(recipe.Ingredients) && recipe.Ingredients.ToLower().Contains(word.ToLower()))
+					|| (!string.IsNullOrEmpty(recipe.Title) && recipe.Title.ToLower().Contains(word.ToLower()))))
 				.ToListAsync();
 			return recipes;
 		}
+
 
 		public async Task<Recipe> GetOneAsync(int recipeId) => await _context.Recipes.FindAsync(recipeId) ?? throw new NotFoundException();
 

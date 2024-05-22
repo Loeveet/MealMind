@@ -12,7 +12,7 @@
 			</div>
 		</div>
 
-		@if (Model.FavouriteRecipes != null)
+		@if (Model.FavouriteRecipes.Count() > 0)
 		{
 			<div class="container">
 				<div class="row">
@@ -58,6 +58,14 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		}
+		else
+		{
+			<div>
+				<h2>
+					Du har inga favoritrecept
+				</h2>
 			</div>
 		}
 	</div>

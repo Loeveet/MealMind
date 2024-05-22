@@ -11,13 +11,13 @@ namespace MasterMealMind.Infrastructure.Services
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Recipe>().ToTable("Recipes");
-            modelBuilder.Entity<FavouriteRecipe>().ToTable("FavouriteRecipes");
+            //modelBuilder.Entity<Recipe>().ToTable("Recipes");
+            //modelBuilder.Entity<FavouriteRecipe>().ToTable("FavouriteRecipes");
 
-			modelBuilder.Entity<FavouriteRecipe>()
-				.Property(fr => fr.Id)
-				.ValueGeneratedOnAdd()
-				.UseIdentityColumn();
+			//modelBuilder.Entity<FavouriteRecipe>()
+			//	.Property(fr => fr.Id)
+			//	.ValueGeneratedOnAdd()
+			//	.UseIdentityColumn();
 		}
 
     }

@@ -25,9 +25,9 @@ namespace MasterMealMind.Web.Pages
 
 		public async Task<IActionResult> OnPostAsync(string[] ingredients, string[] description, string title, string preamble)
 		{
-			if (!ModelState.IsValid)
+			if (!ModelState.IsValid || FavouriteRecipe == null)
 			{
-				return RedirectToPage("/EditFavouriteRecipe", new { recipeId = FavouriteRecipe.Id });
+				return FavouriteRecipe == null ? RedirectToPage("/FavouriteRecipes") : RedirectToPage(new { recipeId = FavouriteRecipe.Id });
 			}
 
 			await _favouriteRecipeService.UpdateAsync(FavouriteRecipe.Id, ingredients, description, title, preamble);

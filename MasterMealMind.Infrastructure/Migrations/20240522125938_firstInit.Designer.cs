@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterMealMind.Infrastructure.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240520125551_firstInit")]
+    [Migration("20240522125938_firstInit")]
     partial class firstInit
     {
         /// <inheritdoc />
@@ -53,7 +53,7 @@ namespace MasterMealMind.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FavouriteRecipes", (string)null);
+                    b.ToTable("FavouriteRecipes");
                 });
 
             modelBuilder.Entity("MasterMealMind.Core.Models.Grocery", b =>
@@ -109,7 +109,7 @@ namespace MasterMealMind.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 #pragma warning restore 612, 618
         }

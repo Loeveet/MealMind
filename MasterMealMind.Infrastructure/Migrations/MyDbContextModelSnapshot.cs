@@ -50,7 +50,7 @@ namespace MasterMealMind.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FavouriteRecipes", (string)null);
+                    b.ToTable("FavouriteRecipes");
                 });
 
             modelBuilder.Entity("MasterMealMind.Core.Models.Grocery", b =>
@@ -106,7 +106,7 @@ namespace MasterMealMind.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 #pragma warning restore 612, 618
         }

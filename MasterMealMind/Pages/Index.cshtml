@@ -39,67 +39,63 @@
 			</div>
 		</div>
 
-		@if (Model.Recipes != null)
+		@if (Model.Recipes.Count() > 0)
 		{
-			if (Model.Recipes.Count() == 0)
-			{
-				<h2 class="my-2">
-					@(
-						string.IsNullOrEmpty(Model.SearchString)
-						? "Databasen är tom"
-						: "Din sökning gav inga resultat"
-					)
-				</h2>
-			}
-			else
-			{
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<div class="table-responsive">
-								<table class="table table-striped">
-									<thead>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th></th>
+										<th class="col-md-3 col-sm-3">Titel</th>
+										<th class="col-md-4 col-sm-4">Beskrivning</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var recipe in Model.Recipes)
+									{
 										<tr>
-											<th></th>
-											<th class="col-md-3 col-sm-3">Titel</th>
-											<th class="col-md-4 col-sm-4">Beskrivning</th>
-											<th></th>
+											<td class="col-1">
+												<div class="form-group">
+													<form method="post" asp-page-handler="AddToFavourites">
+														<input type="hidden" name="recipeId" value="@recipe.Id" />
+														<button class="btn-sm btn-primary" type="submit">Favorit</button>
+													</form>
+												</div>
+											</td>
+											<td class="col-md-3 col-sm-3">
+												<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id" asp-route-source="recipes">
+													@recipe.Title
+												</a>
+											</td>
+											<td class="col-md-3 col-sm-3">
+												<div>
+													@Html.Raw(recipe.Preamble)
+												</div>
+											<td class="col-md-2 col-sm-2">
+												<img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title">
+											</td>
 										</tr>
-									</thead>
-									<tbody>
-										@foreach (var recipe in Model.Recipes)
-										{
-											<tr>
-												<td class="col-1">
-													<div class="form-group">
-														<form method="post" asp-page-handler="AddToFavourites">
-															<input type="hidden" name="recipeId" value="@recipe.Id" />
-															<button class="btn-sm btn-primary" type="submit">Favorit</button>
-														</form>
-													</div>
-												</td>
-												<td class="col-md-3 col-sm-3">
-													<a asp-page="/RecipeDetailsPage" asp-route-recipeId="@recipe.Id" asp-route-source="recipes">
-														@recipe.Title
-													</a>
-												</td>
-												<td class="col-md-3 col-sm-3">
-													<div>
-														@Html.Raw(recipe.Preamble)
-													</div>
-												<td class="col-md-2 col-sm-2">
-													<img src="@recipe.ImgURL" height="150" alt="Bild på @recipe.Title">
-												</td>
-											</tr>
-										}
-									</tbody>
-								</table>
-							</div>
+									}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
-			}
+			</div>
 		}
+		else
+		{
+			<h2 class="my-2">
+				@(string.IsNullOrEmpty(Model.SearchString)
+					? "Databasen är tom"
+					: "Din sökning gav inga resultat")
+			</h2>
+		}
+
 	</div>
 </div>
 
