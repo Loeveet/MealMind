@@ -42,7 +42,7 @@ namespace MasterMealMind.Scraper.Scrapers
 				var clickCount = 0;
 				var wantedClicks = 2;
 
-				//Find and click "show more" a number of times to load recipes
+				//Find and click "show more" the number of times to load recipes
 				while (clickCount < wantedClicks)
 				{
 					try

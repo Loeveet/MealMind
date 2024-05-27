@@ -13,7 +13,7 @@
             }
             else if (!string.IsNullOrEmpty(trimmedIngredient))
             {
-                var ingredientWithFirstLetterUpperCase = char.ToUpper(trimmedIngredient[0]) + trimmedIngredient.Substring(1);
+                var ingredientWithFirstLetterUpperCase = char.ToUpper(trimmedIngredient[0]) + trimmedIngredient[1..];
                 return ingredientWithFirstLetterUpperCase;
             }
             else
