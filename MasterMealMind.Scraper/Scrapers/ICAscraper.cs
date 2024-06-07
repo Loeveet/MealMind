@@ -17,7 +17,6 @@ namespace MasterMealMind.Scraper.Scrapers
 			var options = new ChromeOptions();
 			options.AddArgument("--headless");
 
-			// Instantiate Chrome WebDriver
 			using (var driver = new ChromeDriver(options))
 			{
 
@@ -28,7 +27,6 @@ namespace MasterMealMind.Scraper.Scrapers
 
 				var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
-				// Find and push button for accepting cookies
 				try
 				{
 					var acceptCookiesButton = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), 'Godkänn kakor')]")));
@@ -42,7 +40,6 @@ namespace MasterMealMind.Scraper.Scrapers
 				var clickCount = 0;
 				var wantedClicks = 2;
 
-				//Find and click "show more" the number of times to load recipes
 				while (clickCount < wantedClicks)
 				{
 					try
@@ -59,14 +56,12 @@ namespace MasterMealMind.Scraper.Scrapers
 					}
 
 				}
-				//Find links for individually recipe after all pages has loaded
 				var recipeElements = driver.FindElements(By.XPath("//a[contains(@class, 'recipe-card__content__title font-rubrik-2--mid')]"));
 				foreach (var element in recipeElements)
 				{
 					recipeLinks.Add(element.GetAttribute("href"));
 				}
 
-				// Scrape all recipes i different threads at the same time and waits until all is done
 				await Task.WhenAll(recipeLinks.Select(link => ScraperHelpers.ProcessRecipeAsync(driver, link, recipes)));
 			}
 
